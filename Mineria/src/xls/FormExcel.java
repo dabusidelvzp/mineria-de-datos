@@ -8,7 +8,6 @@ public class FormExcel extends javax.swing.JFrame {
      */
     public FormExcel() {
         initComponents();
-        
         this.setTitle("                                                                       "
                        + "         EXCELITO 3000                           ENTERPRICE EDITION");
         
