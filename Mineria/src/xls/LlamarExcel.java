@@ -90,7 +90,10 @@ public class LlamarExcel implements DropTargetListener{
             /* Si existen hojas */
             if( workbook.getNumberOfSheets() > 0 ){ //validar el numero de hoja...
                 //pedimos el numero de la pagina
-                String numero = JOptionPane.showInputDialog("Escribe el numero de la página donde están los datos");
+                 String numero = null;
+                do {            
+                numero = JOptionPane.showInputDialog("Escribe el numero de la página donde están los datos");
+                }while (!this.isNumeric(numero));
                 //validamos el numero de hoja
                 //primero validamos que no sea null o se cancele la operacion
                 if(numero!=null){
@@ -150,4 +153,12 @@ public class LlamarExcel implements DropTargetListener{
       return this.dt;
   }
   
+  public boolean isNumeric(String cadena){
+	try {
+		Integer.parseInt(cadena);
+		return true;
+	} catch (NumberFormatException nfe){
+		return false;
+	}
+}
 }
