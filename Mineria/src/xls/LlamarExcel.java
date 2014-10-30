@@ -100,26 +100,29 @@ public class LlamarExcel implements DropTargetListener{
                         Sheet hoja = workbook.getSheet( numeroPagina-1 );                
                         
                         /* forma el array para los nombres de las columnas del JTable */
-                        String[] columNames = new String[ hoja.getColumns() ];
-
-                        /* Forma la matriz para los datos */
-                        Object[][] data = new String[ hoja.getRows() ][ hoja.getColumns() ];  
-                        /* Recorre todas las celdas*/
-                        for ( int fila = 0; fila < hoja.getRows(); fila++ )
-                            //sumar los putos valores de cada celda --(celda+=; en c/iteracion)
-                        {   
-                            for ( int columna = 0; columna  < hoja.getColumns() ; columna++ )
-                            {
-                                /* Asigna nombre de columna */
-                                columNames[columna]="COLUMNA " + ( columna + 1 );
-                                /* Lee celda y coloca en el array */
-                                data[ fila ][ columna ] = hoja.getCell(columna, fila).getContents();
-                            }                                        
-                            //VERIFICAR LA ASIGNACION DEL LOS NOMBRE DE LA COLUMNAS
+                        if(hoja.getColumns()>=columnas) {
+                             String[] columNames = new String[ columnas];
+                            /* Forma la matriz para los datos */
+                            Object[][] data = new String[ hoja.getRows() ][ columnas ];  
+                            /* Recorre todas las celdas*/
+                            for ( int fila = 0; fila < hoja.getRows(); fila++ )
+                                //sumar los putos valores de cada celda --(celda+=; en c/iteracion)
+                            {   
+                                for ( int columna = 0; columna  < columnas ; columna++ )
+                                {
+                                    /* Asigna nombre de columna */
+                                    columNames[columna]="COLUMNA " + ( columna + 1 );
+                                    /* Lee celda y coloca en el array */
+                                    data[ fila ][ columna ] = hoja.getCell(columna, fila).getContents();
+                                }                                        
+                                //VERIFICAR LA ASIGNACION DEL LOS NOMBRE DE LA COLUMNAS
+                            }
+                            /* Crea el TableModel y asigna a tabla */
+                            TableModel = new DefaultTableModel( data, columNames );
+                            jtable.setModel(TableModel);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Columnas insuficientes.", "Columas error", JOptionPane.WARNING_MESSAGE);
                         }
-                        /* Crea el TableModel y asigna a tabla */
-                        TableModel = new DefaultTableModel( data, columNames );
-                        jtable.setModel(TableModel);
                     }else {
                         JOptionPane.showMessageDialog(null, "Numero de página no válido,verificalo.", "Página error", JOptionPane.WARNING_MESSAGE);
                     }
