@@ -106,8 +106,9 @@ public class LlamarExcel implements DropTargetListener{
                         if(hoja.getColumns()>=columnas) {
                              String[] columNames = new String[ columnas];
                             /* Forma la matriz para los datos */
-                            Object[][] data = new String[ hoja.getRows() ][ columnas ];  
+                            Float[][] data = new Float[ hoja.getRows() ][ columnas ];  
                             /* Recorre todas las celdas*/
+                            String celda="";
                             for ( int fila = 0; fila < hoja.getRows(); fila++ )
                                 //sumar los putos valores de cada celda --(celda+=; en c/iteracion)
                             {   
@@ -117,7 +118,12 @@ public class LlamarExcel implements DropTargetListener{
                                     /* Asigna nombre de columna */
                                     columNames[columna]="COLUMNA " + ( columna + 1 );
                                     /* Lee celda y coloca en el array */
-                                    data[ fila ][ columna ] = hoja.getCell(columna, fila).getContents();
+                                    celda= hoja.getCell(columna, fila).getContents();
+                                    if(isFlotante(celda))
+                                        data[ fila ][ columna ] = Float.parseFloat(celda);
+                                    else
+                                        fila--;
+                                        
                                 }                                        
                                 //VERIFICAR LA ASIGNACION DEL LOS NOMBRE DE LA COLUMNAS
                             }
@@ -160,5 +166,13 @@ public class LlamarExcel implements DropTargetListener{
 	} catch (NumberFormatException nfe){
 		return false;
 	}
-}
+    }
+  public boolean isFlotante(String cadena){
+	try {
+		Float.parseFloat(cadena);
+		return true;
+	} catch (NumberFormatException nfe){
+		return false;
+	}
+    }
 }
