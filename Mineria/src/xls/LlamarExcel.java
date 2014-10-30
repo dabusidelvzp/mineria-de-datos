@@ -108,6 +108,7 @@ public class LlamarExcel implements DropTargetListener{
                             for ( int fila = 0; fila < hoja.getRows(); fila++ )
                                 //sumar los putos valores de cada celda --(celda+=; en c/iteracion)
                             {   
+                                
                                 for ( int columna = 0; columna  < columnas ; columna++ )
                                 {
                                     /* Asigna nombre de columna */
