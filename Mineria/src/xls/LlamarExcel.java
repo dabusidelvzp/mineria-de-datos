@@ -109,6 +109,7 @@ public class LlamarExcel implements DropTargetListener{
                             Float[][] data = new Float[ hoja.getRows() ][ columnas ];  
                             /* Recorre todas las celdas*/
                             String celda="";
+                            Integer contador=0;
                             for ( int fila = 0; fila < hoja.getRows(); fila++ )
                                 //sumar los putos valores de cada celda --(celda+=; en c/iteracion)
                             {   
@@ -120,16 +121,19 @@ public class LlamarExcel implements DropTargetListener{
                                     /* Lee celda y coloca en el array */
                                     celda= hoja.getCell(columna, fila).getContents();
                                     if(isFlotante(celda))
-                                        data[ fila ][ columna ] = Float.parseFloat(celda);
+                                        data[ fila-contador ][ columna ] = Float.parseFloat(celda);
                                     else
-                                        fila--;
+                                        contador++;
                                         
                                 }                                        
                                 //VERIFICAR LA ASIGNACION DEL LOS NOMBRE DE LA COLUMNAS
                             }
+                            //rearmamos el arreglo para quitarle registros vacios
+                            Float[][] datos=depurarArreglo(data,contador);
                             /* Crea el TableModel y asigna a tabla */
-                            TableModel = new DefaultTableModel( data, columNames );
+                            TableModel = new DefaultTableModel( datos, columNames );
                             jtable.setModel(TableModel);
+                            
                         } else {
                             JOptionPane.showMessageDialog(null, "Columnas insuficientes.", "Columas error", JOptionPane.WARNING_MESSAGE);
                         }
@@ -174,5 +178,15 @@ public class LlamarExcel implements DropTargetListener{
 	} catch (NumberFormatException nfe){
 		return false;
 	}
+    }
+
+    private Float[][] depurarArreglo(Float[][] data,Integer c) {
+        Float[][] datos= new Float[data.length-c][data[0].length];
+        for(int i=0;i<datos.length;i++){
+            for(int j=0;j<datos[0].length;j++){
+                datos[i][j]=data[i][j];
+            }
+        }
+        return datos;
     }
 }
