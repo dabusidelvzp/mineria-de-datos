@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import regresiones.RegresionMultiple;
 
 
 public class LlamarExcel implements DropTargetListener{
@@ -106,7 +107,7 @@ public class LlamarExcel implements DropTargetListener{
                         if(hoja.getColumns()>=columnas) {
                              String[] columNames = new String[ columnas];
                             /* Forma la matriz para los datos */
-                            Float[][] data = new Float[ hoja.getRows() ][ columnas ];  
+                            Double[][] data = new Double[ hoja.getRows() ][ columnas ];  
                             /* Recorre todas las celdas*/
                             String celda="";
                             Integer contador=0;
@@ -120,8 +121,8 @@ public class LlamarExcel implements DropTargetListener{
                                     columNames[columna]="COLUMNA " + ( columna + 1 );
                                     /* Lee celda y coloca en el array */
                                     celda= hoja.getCell(columna, fila).getContents();
-                                    if(isFlotante(celda))
-                                        data[ fila-contador ][ columna ] = Float.parseFloat(celda);
+                                    if(isDouble(celda))
+                                        data[ fila-contador ][ columna ] = Double.parseDouble(celda);
                                     else
                                         contador++;
                                         
@@ -129,10 +130,19 @@ public class LlamarExcel implements DropTargetListener{
                                 //VERIFICAR LA ASIGNACION DEL LOS NOMBRE DE LA COLUMNAS
                             }
                             //rearmamos el arreglo para quitarle registros vacios
-                            Float[][] datos=depurarArreglo(data,contador);
+                            Double[][] datos=depurarArreglo(data,contador);
                             /* Crea el TableModel y asigna a tabla */
                             TableModel = new DefaultTableModel( datos, columNames );
                             jtable.setModel(TableModel);
+                            //Resolvemos 
+                            if(columnas==1){
+                                
+                            }else if(columnas==2){
+                                
+                            }else if(columnas==3){
+                                RegresionMultiple multiple= new RegresionMultiple(datos);
+                                multiple.resolver();
+                            }
                             
                         } else {
                             JOptionPane.showMessageDialog(null, "Columnas insuficientes.", "Columas error", JOptionPane.WARNING_MESSAGE);
@@ -171,17 +181,17 @@ public class LlamarExcel implements DropTargetListener{
 		return false;
 	}
     }
-  public boolean isFlotante(String cadena){
+  public boolean isDouble(String cadena){
 	try {
-		Float.parseFloat(cadena);
+		Double.parseDouble(cadena);
 		return true;
 	} catch (NumberFormatException nfe){
 		return false;
 	}
     }
 
-    private Float[][] depurarArreglo(Float[][] data,Integer c) {
-        Float[][] datos= new Float[data.length-c][data[0].length];
+    private Double[][] depurarArreglo(Double[][] data,Integer c) {
+        Double[][] datos= new Double[data.length-c][data[0].length];
         for(int i=0;i<datos.length;i++){
             for(int j=0;j<datos[0].length;j++){
                 datos[i][j]=data[i][j];
