@@ -43,8 +43,8 @@ public class TablaExcel extends javax.swing.JInternalFrame {
 
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
 
-        jTable1.setBackground(new java.awt.Color(153, 255, 255));
-        jTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
+        jTable1.setBackground(new java.awt.Color(56, 144, 255));
+        jTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(246, 70, 27), 2, true));
         jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -78,11 +78,10 @@ public class TablaExcel extends javax.swing.JInternalFrame {
                 "COLUMNA 1", "COLUMNA 2", "COLUMNA 3", "COLUMNA 4"
             }
         ));
-        jTable1.setColumnSelectionAllowed(true);
         jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.N_RESIZE_CURSOR));
         jTable1.setInheritsPopupMenu(true);
         jTable1.setMinimumSize(new java.awt.Dimension(80, 80));
-        jTable1.setSelectionBackground(new java.awt.Color(204, 0, 0));
+        jTable1.setSelectionBackground(new java.awt.Color(255, 51, 51));
         jTable1.setSelectionForeground(new java.awt.Color(153, 153, 153));
         jScrollPane1.setViewportView(jTable1);
         jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);

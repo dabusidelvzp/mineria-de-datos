@@ -28,8 +28,8 @@ public class FormExcel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setBackground(new java.awt.Color(153, 255, 255));
-        jTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
+        jTable1.setBackground(new java.awt.Color(56, 144, 255));
+        jTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 102, 0), 2, true));
         jTable1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
