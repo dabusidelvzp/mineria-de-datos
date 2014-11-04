@@ -107,7 +107,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu2.setText("Ayuda");
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem4.setText("Página de inicia");
+        jMenuItem4.setText("Página de inicio");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -172,6 +172,23 @@ public class Menu extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
+        
+         /*Inicio tabla= new Inicio();
+            this.jDesktopPane1.add(tabla);
+            tabla.show();
+           */ 
+            //    Inicio tabla= new Inicio();
+            //this.jDesktopPane1.add(tabla);
+            //tabla.show();
+        
+        /*if(jMenuItem4.getActionCommand().equals("Página de inicio")){
+            Inicio inicio = new Inicio();
+            inicio.setVisible(true);
+        }
+        */
+               
+            
+        
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed

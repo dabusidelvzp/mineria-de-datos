@@ -47,12 +47,12 @@
         <Component class="javax.swing.JTable" name="jTable1">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="99" type="rgb"/>
+              <Color blue="ff" green="90" red="38" type="rgb"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder roundedCorners="true" thickness="2">
-                  <Color PropertyName="color" blue="0" green="0" red="ff" type="rgb"/>
+                  <Color PropertyName="color" blue="0" green="66" red="ff" type="rgb"/>
                 </LineBorder>
               </Border>
             </Property>
