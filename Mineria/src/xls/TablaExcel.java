@@ -19,7 +19,7 @@ public class TablaExcel extends javax.swing.JInternalFrame {
         LlamarExcel de;
         initComponents();
         this.jLabel1.setText(titulo);
-        de = new LlamarExcel( jTable1, columnas );
+        de = new LlamarExcel( jTable1, columnas ,this.jTabbedPane1);
     }
 
     /**
@@ -35,8 +35,6 @@ public class TablaExcel extends javax.swing.JInternalFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jTabbedPane3 = new javax.swing.JTabbedPane();
 
         setClosable(true);
         setMaximizable(true);
@@ -88,8 +86,6 @@ public class TablaExcel extends javax.swing.JInternalFrame {
         jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         jTabbedPane1.addTab("Datos", jScrollPane1);
-        jTabbedPane1.addTab("Resultados", jTabbedPane2);
-        jTabbedPane1.addTab("Gráficas", jTabbedPane3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,8 +118,6 @@ public class TablaExcel extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

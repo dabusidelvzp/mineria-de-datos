@@ -10,6 +10,7 @@ import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import jxl.Sheet;
@@ -23,11 +24,15 @@ public class LlamarExcel implements DropTargetListener{
     private JTable jtable;
     private DefaultTableModel TableModel = new DefaultTableModel();
     private Integer columnas =0;
+    private JTabbedPane p1;
     
-    public LlamarExcel( JTable jtable ,Integer c){
+    public LlamarExcel( JTable jtable ,Integer c,JTabbedPane pestana){
         this.jtable = jtable;
         this.columnas=c;
+        p1 = pestana;
+        
         dt = new DropTarget( jtable , this );  
+        
     }
     
   @Override
@@ -141,7 +146,7 @@ public class LlamarExcel implements DropTargetListener{
                                 
                             }else if(columnas==3){
                                 RegresionMultiple multiple= new RegresionMultiple(datos);
-                                multiple.resolver();
+                                multiple.resolver(p1);
                             }
                             
                         } else {

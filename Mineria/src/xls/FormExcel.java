@@ -11,7 +11,7 @@ public class FormExcel extends javax.swing.JFrame {
         this.setTitle("                                                                       "
                        + "         EXCELITO 3000                           ENTERPRICE EDITION");
         
-        de = new LlamarExcel( jTable1 ,3);
+       // de = new LlamarExcel( jTable1 ,3);
     }
 
     /**
