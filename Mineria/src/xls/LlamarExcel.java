@@ -17,6 +17,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import regresiones.RegresionMultiple;
+import regresiones.RegresionSimple;
 
 
 public class LlamarExcel implements DropTargetListener{
@@ -143,6 +144,9 @@ public class LlamarExcel implements DropTargetListener{
                             if(columnas==1){
                                 
                             }else if(columnas==2){
+                                RegresionSimple simple = new RegresionSimple(datos);
+                                System.out.println("entro 2");
+                                simple.Resolver();
                                 
                             }else if(columnas==3){
                                 RegresionMultiple multiple= new RegresionMultiple(datos);
