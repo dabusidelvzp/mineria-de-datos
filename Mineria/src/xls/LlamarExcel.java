@@ -146,7 +146,7 @@ public class LlamarExcel implements DropTargetListener{
                             }else if(columnas==2){
                                 RegresionSimple simple = new RegresionSimple(datos);
                                 System.out.println("entro 2");
-                                simple.Resolver();
+                                simple.Resolver(p1);
                                 
                             }else if(columnas==3){
                                 RegresionMultiple multiple= new RegresionMultiple(datos);

@@ -6,16 +6,26 @@
 
 package regresiones;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author hazel
  */
 public class RegresionSimple {
-    private Double N;
+    private int N;
     private Double[][] datos;
     private Double[] sumatorias;
     private Double[] xiyi;
@@ -34,7 +44,7 @@ public class RegresionSimple {
     private Double redondeoSumatoriax2;
     private Double redondeoSumatoriay2;
     public RegresionSimple(Double[][] d){
-        N = 0.0;
+        N = d.length;
         datos = d;
         sumatorias = new Double[9];
         xiyi = new Double[datos.length];
@@ -44,12 +54,13 @@ public class RegresionSimple {
         
     }
     
-    public void Resolver(){
+    public void Resolver(JTabbedPane resultados){
+        
         for(int i = 0; i<9; i++){
             sumatorias[i] = 0.0;
         }
         try{
-        N = datos.length+0.0;
+            System.out.println("TOTAL DE DATOS: "+N);
         for(int i = 0; i < N ; i++){
             xiyi[i] = datos[i][0] * datos[i][1];
             System.out.println("X*Y"+i+": "+xiyi[i]);
@@ -89,8 +100,10 @@ public class RegresionSimple {
            dy = Math.sqrt(((redondeoSumatoriay2 /N)-(mediay*mediay)));
            dx = Math.sqrt(((redondeoSumatoriax2/N)-(mediax*mediax)));
            
-         
-            
+           b1 = ((sumatorias[2]*N)-sumatorias[0]*sumatorias[1])/((sumatorias[3]*N)-(sumatorias[0]*sumatorias[0]));
+           b0 = (sumatorias[1]/N)- ((b1 * sumatorias[0])/N);
+
+
 
 
            System.out.println("sum x: " + sumatorias[0]);
@@ -101,6 +114,57 @@ public class RegresionSimple {
            System.out.println("DX7: " + dxy);
            System.out.println("DY: " + dy);
            System.out.println("DX: "+ dx);
+           System.out.println("B0: "+ b0);
+           System.out.println("B1: "+ b1);
+           
+           // mostramos resultados para la pestaña resultados***********************************************************************
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.white);
+        JLabel titulo = new JLabel("Resultados");//creamos el titulo
+        panel.add(titulo,BorderLayout.PAGE_START);//lo agregamos al inicio
+        JTable jtable = new JTable();//creamos la tabla a mostrar
+        jtable.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
+        jtable.setFont(new java.awt.Font("Arial", 1, 14)); 
+        jtable.setColumnSelectionAllowed(true);
+        jtable.setCursor(new java.awt.Cursor(java.awt.Cursor.N_RESIZE_CURSOR));
+        jtable.setInheritsPopupMenu(true);
+        jtable.setMinimumSize(new java.awt.Dimension(80, 80));
+        String[] titulos = {"Xi*Yi","X2","Y2"};//los titulos de la tabla
+        Double[][] arregloFinal = new Double[N][4];
+        for(int i=0;i<N;i++){//armamos el arreglo
+            arregloFinal[i][0]= xiyi[i];
+            arregloFinal[i][1]= x2[i];
+            arregloFinal[i][3]= y2[i];
+        }
+        DefaultTableModel TableModel = new DefaultTableModel( arregloFinal, titulos );
+        jtable.setModel(TableModel); 
+        JScrollPane jScrollPane1 = new JScrollPane();
+        jScrollPane1.setViewportView(jtable);
+        jtable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        panel.add(jScrollPane1,BorderLayout.CENTER);
+        JPanel panel2 = new JPanel(new GridLayout(0,4));//creo un panel con rejilla de 4 columnas
+        JLabel etiquetaN = new JLabel("N");
+        JTextField cajaN = new JTextField();
+        cajaN.setText(N+"");
+        //JLabel etiquetaK = new JLabel("K");
+        //JTextField cajaK = new JTextField();
+        //cajaK.setText("2");
+        JLabel etiquetab0 = new JLabel("b0");
+        JTextField cajab0 = new JTextField();
+        cajab0.setText(b0+"");
+        JLabel etiquetab1 = new JLabel("b1");
+        JTextField cajab1 = new JTextField();
+        cajab1.setText(b1+"");
+        JLabel etiquetab2 = new JLabel("b2");
+        JTextField cajab2 = new JTextField();
+        panel2.add(etiquetab2);
+        panel2.add(etiquetab0);
+        panel2.add(cajab0);
+        panel2.add(etiquetab1);
+        panel2.add(cajab1);
+        panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
+        resultados.addTab("resultado", panel);
         }catch(Exception e){
             e.printStackTrace();
         }
