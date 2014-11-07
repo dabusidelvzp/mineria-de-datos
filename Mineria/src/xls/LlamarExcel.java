@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import regresiones.EstadisticaDescriptiva;
 import regresiones.RegresionMultiple;
 import regresiones.RegresionSimple;
 
@@ -142,6 +143,8 @@ public class LlamarExcel implements DropTargetListener{
                             jtable.setModel(TableModel);
                             //Resolvemos 
                             if(columnas==1){
+                                EstadisticaDescriptiva  e  = new EstadisticaDescriptiva(datos);
+                                e.resolver();
                                 
                             }else if(columnas==2){
                                 RegresionSimple simple = new RegresionSimple(datos);
