@@ -19,16 +19,16 @@ import javax.swing.JTabbedPane;
 public class EstadisticaDescriptiva {
 
     private Integer N;
-    private Integer MAXIMO;
-    private Integer MINIMO;
-    private Integer RANGO;
-    private Integer INTERVALOS;
-    private Integer AMPLITUD;
-    private Integer RANGOAMPLIADO;
-    private Integer DIFERENCIARANGOS;
-    private Integer LIPI;
-    private Integer LSUI;
-    private Integer MEDIA;
+    private Double MAXIMO;
+    private Double MINIMO;
+    private Double RANGO;
+    private Double INTERVALOS;
+    private Double AMPLITUD;
+    private Double RANGOAMPLIADO;
+    private Double DIFERENCIARANGOS;
+    private Double LIPI;
+    private Double LSUI;
+    private Double MEDIA;
     private Integer MODA;
     private Integer MEDIANA;
     private Integer PRIMERO;
@@ -62,22 +62,25 @@ public class EstadisticaDescriptiva {
          }        
          */
         N = datos.length;
-        System.out.println("total de valores " + N);
+        //System.out.println("total de valores " + N);
         Double[] mmm = MaxYmin();
         System.out.println("Max " + mmm[0]);        
         System.out.println("Min " + mmm[1]);
         
-        System.out.println("el valor de R es " + Rango());
+        RANGO = Rango();
         System.out.println("Intervalos" + Intervalo());
+        INTERVALOS = Intervalo();
         System.out.println("Amplitud : " + Ampli());
         System.out.println("Rango ampliado " + RangoAmp());
         System.out.println("Diferencia de Rango : " + DifRango());
         System.out.println("Lipi : " + LiPi());
+        LIPI = LiPi();
         System.out.println("Lsui : " + Lsui());
+        LSUI = Lsui();
         System.out.println("Media : " + Media());
-        
+        MEDIA = Media();
         System.out.println("" + RecorreTabla());
-        MakeMatriz();
+        Double[][] tabla=MakeMatriz();
 
     }
     //
@@ -264,32 +267,36 @@ public class EstadisticaDescriptiva {
         return datos;
     }
     
-    public Double  MakeMatriz(){
+    public Double[][]  MakeMatriz(){
         System.out.println("CReando matriz");
-        Double LS = 0.0;
-                Double inter = Intervalo();
-        //imprimiendo los valores + 1
-        /* for (int i = 1; i < inter+1; i++) {
-            System.out.println("--------------");
-            System.out.println("-" + i);            
-        } */
-                
-                Double Li = LiPi();
-                Double a = Ampli();
-                Double Ls =Ls();;
-                Double Xi = Xi();
-                
-                
-                
-                //INTERVALOS
-                System.out.println("-INTERVAL-   Li        Ls        Xi");
-                for (int i = 0; i < inter; i++) {
-            
-            System.out.println("   " + i + "     -   "  + Li + "    - " + LS + "    - " + Xi);            
+        Double[][] auxiliar= new Double[N][10];
+       
+        //INTERVALOS
+        //LLenamos la primer fila
+        auxiliar[0][0]=LIPI;
+        auxiliar[0][1]=auxiliar[0][0]+AMPLITUD;
+        auxiliar[0][2]=(auxiliar[0][0]+auxiliar[0][1])/2;//Xi
+        auxiliar[0][3]=Fi(auxiliar[0][0],auxiliar[0][1]);//Fi
+        auxiliar[0][4]=auxiliar[0][3];//fa
+        auxiliar[0][5] = auxiliar[0][3]/N;//Fr
+        auxiliar[0][6] = auxiliar[0][5];//Fra
+        auxiliar[0][7] = auxiliar[0][2] * auxiliar[0][3];//XiFi
+        auxiliar[0][8] = Math.abs(auxiliar[0][2]-MEDIA) * auxiliar[0][3];//(Xi-Media)*FI
+        auxiliar[0][9] = Math.pow(auxiliar[0][2]-MEDIA, 2)* auxiliar[0][3];//(Xi-Media)^2 Fi
+        for (int i = 1; i < auxiliar.length; i++) {
+             auxiliar[i][0]=auxiliar[i-1][1];
+            auxiliar[i][1]=auxiliar[i][0]+AMPLITUD;
+            auxiliar[i][2]=(auxiliar[i][0]+auxiliar[i][1])/2;//Xi
+            auxiliar[i][3]=Fi(auxiliar[i][0],auxiliar[i][1]);//Fi
+            auxiliar[i][4]=auxiliar[i][3];//fa
+            auxiliar[i][5] = auxiliar[i][3]/N;//Fr
+            auxiliar[i][6] = auxiliar[i][5];//Fra
+            auxiliar[i][7] = auxiliar[i][2] * auxiliar[0][3];//XiFi
+            auxiliar[i][8] = Math.abs(auxiliar[i][2]-MEDIA) * auxiliar[i][3];//(Xi-Media)*FI
+            auxiliar[i][9] = Math.pow(auxiliar[i][2]-MEDIA, 2)* auxiliar[i][3];//(Xi-Media)^2 Fi
         }
-                
-                
-        return inter;
+        
+        return auxiliar;
     }
 
     private Double Ls() {
@@ -318,12 +325,6 @@ public class EstadisticaDescriptiva {
                 }                
                 //
                 return Xi;
-    }
-    private Double fi(){
-        //sacar la puta frecuencia
-        Double fi = 0.0;
-        
-    return fi;
     }
     
     
@@ -364,5 +365,9 @@ public class EstadisticaDescriptiva {
     return popular2;
     
 }*/
+
+    private Double Fi(Double aDouble, Double aDouble0) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
