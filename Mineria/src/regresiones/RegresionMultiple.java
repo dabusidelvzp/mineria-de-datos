@@ -16,6 +16,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -162,8 +171,75 @@ public class RegresionMultiple {
         panel2.add(cajaSe);
         panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
         resultados.addTab("resultado", panel);
+        //**************************************************************************************
+        JPanel graficas = new JPanel(new GridLayout(0,1));
+        XYDataset dataset = createSampleDataset(null);
+        JFreeChart chart = ChartFactory.createXYLineChart(
+            "Grafica 1",
+            "X",
+            "Y",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,
+            false,
+            false
+        );
+        XYPlot plot = (XYPlot) chart.getPlot();
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, true);
+        renderer.setSeriesLinesVisible(1, true);
+        renderer.setSeriesShapesVisible(1, true);        
+        plot.setRenderer(renderer);
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+        graficas.add(chartPanel);//agregamos la primer grafica
+        //********** creamos la segunda grafica
+        XYDataset dataset2 = createSampleDataset(Yestimada);
+        JFreeChart chart2 = ChartFactory.createXYLineChart(
+            "Grafica 2",
+            "X",
+            "Y",
+            dataset2,
+            PlotOrientation.VERTICAL,
+            true,
+            false,
+            false
+        );
+        XYPlot plot2 = (XYPlot) chart2.getPlot();
+        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer();
+        renderer2.setSeriesLinesVisible(0, true);
+        renderer2.setSeriesShapesVisible(0, true);
+        renderer2.setSeriesLinesVisible(1, true);
+        renderer2.setSeriesShapesVisible(1, true);        
+        plot2.setRenderer(renderer2);
+        final ChartPanel chartPanel2 = new ChartPanel(chart2);
+        chartPanel2.setPreferredSize(new java.awt.Dimension(500, 300));
+        graficas.add(chartPanel2);
+        resultados.addTab("graficas", graficas);
     }
-
+    private XYDataset createSampleDataset(Double[] estimada) {
+        XYSeries series1 = new XYSeries("X1-Y");
+        for(int i=0;i<datos.length;i++){
+            if(estimada==null)
+                series1.add(datos[i][0], datos[i][2]);
+            else
+                series1.add(datos[i][0], estimada[i]);
+        }
+        
+        XYSeries series2 = new XYSeries("X2-Y");
+        for(int i=0;i<datos.length;i++){
+            if(estimada==null)
+                series2.add(datos[i][1], datos[i][2]);
+            else
+                series2.add(datos[i][1], estimada[i]);
+        }
+        
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+        dataset.addSeries(series2);
+        return dataset;
+    }
     private void inicializarArreglos() {
         for(int i=0;i<9;i++)
             sumatorias[i]=0.0;
