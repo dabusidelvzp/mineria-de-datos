@@ -283,6 +283,7 @@ public class EstadisticaDescriptiva {
         auxiliar[0][7] = auxiliar[0][2] * auxiliar[0][3];//XiFi
         auxiliar[0][8] = Math.abs(auxiliar[0][2]-MEDIA) * auxiliar[0][3];//(Xi-Media)*FI
         auxiliar[0][9] = Math.pow(auxiliar[0][2]-MEDIA, 2)* auxiliar[0][3];//(Xi-Media)^2 Fi
+        
         for (int i = 1; i < auxiliar.length; i++) {
              auxiliar[i][0]=auxiliar[i-1][1];
             auxiliar[i][1]=auxiliar[i][0]+AMPLITUD;
@@ -294,6 +295,7 @@ public class EstadisticaDescriptiva {
             auxiliar[i][7] = auxiliar[i][2] * auxiliar[0][3];//XiFi
             auxiliar[i][8] = Math.abs(auxiliar[i][2]-MEDIA) * auxiliar[i][3];//(Xi-Media)*FI
             auxiliar[i][9] = Math.pow(auxiliar[i][2]-MEDIA, 2)* auxiliar[i][3];//(Xi-Media)^2 Fi
+            
         }
         System.out.println("matriz");
         //imprimir matriz
@@ -337,44 +339,8 @@ public class EstadisticaDescriptiva {
     }
     
     
-    /*
     
-    public Double mode(){
-    Double n = datos[0][0];
-    Arrays.sort(datos);
-    
-    Double count2 = 0.0;
-    Double count1 = 0.0;
-    Double pupular1 =0.0;
-    Double popular2 =0.0;
-
-
-    for (int i = 0; i < datos.length; i++)
-    {
-            pupular1 = datos[i];
-            count1 = 0;    //see edit
-
-        for (int j = i + 1; j < n.length; j++)
-        {
-            if (pupular1 == n[j]) count1++;
-        }
-
-        if (count1 > count2)
-        {
-                popular2 = pupular1;
-                count2 = count1;
-        }
-
-        else if(count1 == count2)
-        {
-            popular2 = Math.min(popular2, pupular1);
-        }
-    }
-
-    return popular2;
-    
-}*/
-
+    //frecuencia
     private Double Fi(Double Li, Double Ls) {
         // fr > L1 & <= ls 
         Double Contador = 0.0;        
@@ -388,6 +354,31 @@ public class EstadisticaDescriptiva {
      
         return Contador;
         
+    }
+    
+    public Double DM(){
+        Integer a = N;
+        
+         //=TRUNCAR(min-DifR/2)
+        // sumar los valores de DM y Div / N
+        Double Mo = 0.0;
+        Double Li = 0.0;
+        Double fi = 0.0;
+        double ai = 0.0;
+        // Mo = Li +((fi - (fi-1))/((fi - (fi-1)) + (fi - (fi+1)))*ai;
+        Double DM = 0.0;
+        
+        
+        
+
+        return DM;
+        
+    }
+    public Double Varianza(Double DM){
+        Double V = 0.0;
+        V = Math.sqrt(DM);
+        
+        return V;
     }
 
 }
