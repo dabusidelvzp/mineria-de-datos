@@ -22,7 +22,7 @@ public class EstadisticaDescriptiva {
     private Double MAXIMO;
     private Double MINIMO;
     private Double RANGO;
-    private Double INTERVALOS;
+    private Integer INTERVALOS;
     private Double AMPLITUD;
     private Double RANGOAMPLIADO;
     private Double DIFERENCIARANGOS;
@@ -71,6 +71,7 @@ public class EstadisticaDescriptiva {
         System.out.println("Intervalos" + Intervalo());
         INTERVALOS = Intervalo();
         System.out.println("Amplitud : " + Ampli());
+        AMPLITUD = Ampli();
         System.out.println("Rango ampliado " + RangoAmp());
         System.out.println("Diferencia de Rango : " + DifRango());
         System.out.println("Lipi : " + LiPi());
@@ -79,7 +80,7 @@ public class EstadisticaDescriptiva {
         LSUI = Lsui();
         System.out.println("Media : " + Media());
         MEDIA = Media();
-        System.out.println("" + RecorreTabla());
+        //System.out.println("" + RecorreTabla());
         Double[][] tabla=MakeMatriz();
 
     }
@@ -122,7 +123,7 @@ public class EstadisticaDescriptiva {
 
     }
 
-    public Double Intervalo() {
+    public Integer Intervalo() {
 
         //intervalo = floor(1+3.3*LOG(N));
         N = datos.length;
@@ -136,15 +137,15 @@ public class EstadisticaDescriptiva {
                   //System.out.println("-N- = " + N);
         //System.out.println("Log" + logaN);
         //   System.out.println("intervalos " + M);
-        return M;
+        return M.intValue();
     }
 
     public Double Ampli() {
         // aplitud = (rango / intervalo  ) +5;
         Double amplitud = 0.0;
-        int cinco = 5;
+        int cinco = 4;
         Double r = Rango();
-        Double i = Intervalo();
+        Integer i = Intervalo();
 
         amplitud = (r / i) + cinco;
         amplitud = floor(amplitud);
@@ -157,7 +158,7 @@ public class EstadisticaDescriptiva {
         Double RangoA = 0.0;
 
         Double a = Ampli();
-        Double i = Intervalo();
+        Integer i = Intervalo();
 
         RangoA = floor(a * i);
         //  System.out.println("Rango amp " + RangoA);
@@ -184,9 +185,7 @@ public class EstadisticaDescriptiva {
         min = mmm[1];
 
         Lipi = (min - (r / 2));
-        if (Lipi <0){
-            Lipi = 0.0;            
-        }
+        
 
         return Lipi;
     }
@@ -257,7 +256,7 @@ public class EstadisticaDescriptiva {
     public Double[][] RecorreTabla() {
         System.out.println("-------------------------");
         //Arrays.sort(datos);
-        Double a = datos[0][0];        
+      //  Double a = datos[0][0];        
         for (int i = 0; i < datos.length; i++) {
             
                 System.out.print(datos[i][0]);
@@ -268,9 +267,10 @@ public class EstadisticaDescriptiva {
     }
     
     public Double[][]  MakeMatriz(){
+        
         System.out.println("CReando matriz");
-        Double[][] auxiliar= new Double[N][10];
-       
+        Double[][] auxiliar= new Double[INTERVALOS][10];
+       try {
         //INTERVALOS
         //LLenamos la primer fila
         auxiliar[0][0]=LIPI;
@@ -289,10 +289,10 @@ public class EstadisticaDescriptiva {
             auxiliar[i][1]=auxiliar[i][0]+AMPLITUD;
             auxiliar[i][2]=(auxiliar[i][0]+auxiliar[i][1])/2;//Xi
             auxiliar[i][3]=Fi(auxiliar[i][0],auxiliar[i][1]);//Fi
-            auxiliar[i][4]=auxiliar[i][3];//fa
+            auxiliar[i][4]=auxiliar[i-1][4]+auxiliar[i][3];//fa
             auxiliar[i][5] = auxiliar[i][3]/N;//Fr
-            auxiliar[i][6] = auxiliar[i][5];//Fra
-            auxiliar[i][7] = auxiliar[i][2] * auxiliar[0][3];//XiFi
+            auxiliar[i][6] = auxiliar[i][5] + auxiliar[i-1][6];//Fra
+            auxiliar[i][7] = auxiliar[i][2] * auxiliar[i][3];//XiFi
             auxiliar[i][8] = Math.abs(auxiliar[i][2]-MEDIA) * auxiliar[i][3];//(Xi-Media)*FI
             auxiliar[i][9] = Math.pow(auxiliar[i][2]-MEDIA, 2)* auxiliar[i][3];//(Xi-Media)^2 Fi
             
@@ -301,11 +301,15 @@ public class EstadisticaDescriptiva {
         //imprimir matriz
         for (int i = 0; i < auxiliar.length; i++) {
             
-            for (int j = 0; j < auxiliar.length; j++) {
-                System.out.println(auxiliar[i][j]);
+            for (int j = 0; j < auxiliar[0].length; j++) {
+                System.out.print(auxiliar[i][j]+" - ");
                 
             }
+            System.out.println("");
             
+        }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         
         return auxiliar;
