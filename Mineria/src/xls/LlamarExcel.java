@@ -144,7 +144,7 @@ public class LlamarExcel implements DropTargetListener{
                             //Resolvemos 
                             if(columnas==1){
                                 EstadisticaDescriptiva  e  = new EstadisticaDescriptiva(datos);
-                                e.resolver();
+                                e.resolver(p1);
                                 
                             }else if(columnas==2){
                                 RegresionSimple simple = new RegresionSimple(datos);
