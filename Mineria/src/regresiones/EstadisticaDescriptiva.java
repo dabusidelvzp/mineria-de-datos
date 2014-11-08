@@ -295,6 +295,16 @@ public class EstadisticaDescriptiva {
             auxiliar[i][8] = Math.abs(auxiliar[i][2]-MEDIA) * auxiliar[i][3];//(Xi-Media)*FI
             auxiliar[i][9] = Math.pow(auxiliar[i][2]-MEDIA, 2)* auxiliar[i][3];//(Xi-Media)^2 Fi
         }
+        System.out.println("matriz");
+        //imprimir matriz
+        for (int i = 0; i < auxiliar.length; i++) {
+            
+            for (int j = 0; j < auxiliar.length; j++) {
+                System.out.println(auxiliar[i][j]);
+                
+            }
+            
+        }
         
         return auxiliar;
     }
@@ -366,8 +376,19 @@ public class EstadisticaDescriptiva {
     
 }*/
 
-    private Double Fi(Double aDouble, Double aDouble0) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Double Fi(Double Li, Double Ls) {
+        // fr > L1 & <= ls 
+        Double Contador = 0.0;        
+        for (int i = 0; i < datos.length; i++) {
+            //Double[] doubles = x[i];
+            if ( datos[i][0] > Li && datos[i][0] <= Ls){
+                Contador ++;
+            }
+            
+        }
+     
+        return Contador;
+        
     }
 
 }
