@@ -324,15 +324,14 @@ public class EstadisticaDescriptiva {
     private Double Xi(){
         //Xi =(Li + Ls) /2;
         Double Xi = 0.0;
+        
         Double Li = LiPi();
         Double Ls = Lsui();
         
         //calculando  Xi
-                if(Ls == 0 && Li == 0){
-                    Xi = 0.0;
-                }else{
+                
                     Xi = (Li + Ls)/2;
-                }                
+                
                 //
                 return Xi;
     }
