@@ -12,11 +12,13 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTable.PrintMode;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
@@ -202,6 +204,13 @@ public class RegresionSimple {
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
         graficas.add(chartPanel);//agregamos la primer grafica
         resultados.addTab("Graficas", graficas);
+        
+        //IMPRIMIR JTABLE
+        MessageFormat headerFormat = new MessageFormat("MI CABECERA");
+        MessageFormat footerFormat = new MessageFormat("- Página {0} -");
+        jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);
+        
+        
         }catch(Exception e){
             e.printStackTrace();
         }
