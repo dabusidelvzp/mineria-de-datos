@@ -9,6 +9,7 @@ package regresiones;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.text.DecimalFormat;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,8 +38,6 @@ public class RegresionMultiple {
     private Double b2;
     private Double Se;
     private Double[][] datos;
-    private Double[][] auxiliar;
-    private Double[] sumatorias;
     
     public RegresionMultiple(Double[][] d){
         N=0;
@@ -47,14 +46,21 @@ public class RegresionMultiple {
         b2 = 0.0;
         Se = 0.0;
         datos=d;
-        sumatorias= new Double[9];
     }
     @SuppressWarnings("empty-statement")
     public void resolver(JTabbedPane resultados){
+        try {
         N = datos.length;
-        auxiliar = new Double[N][6];
+       Double[] sumatorias = new Double[9];
+       Double[][] auxiliar = new Double[N][6];
         //inicializamos los arreglos
-        inicializarArreglos();
+        for(int i=0;i<9;i++)
+            sumatorias[i]=0.0;
+        for(int i=0;i<N;i++){
+            for(int j=0;j<6;j++){
+                auxiliar[i][j]=0.0;
+            }
+        }
         //llenamos nuestro arreglo auxiliar donde va x1^2,x2^2,x1*y,x2*y,x1*x2,Y-Y(estimada)
         for(int i=0;i<N;i++){
             auxiliar[i][0]=Math.pow(datos[i][0], 2);
@@ -109,8 +115,23 @@ public class RegresionMultiple {
        }
        //calculamos Se
        Se =Math.sqrt(Math.pow(sumatorias[8], 2)/(N-2-1));
-        //System.out.println("Se: "+Se);
-       // mostramos resultados para la pestaña resultados***********************************************************************
+        pintar(Yestimada,resultados);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public Double calDeterminante (Double[][] matriz1) {
+        Double determinante = ((matriz1[0][0] * matriz1[1][1] * matriz1[2][2]) + 
+                (matriz1[0][1] * matriz1[1][2] * matriz1[2][0]) + 
+                (matriz1[0][2] * matriz1[1][0] * matriz1[2][1]) )
+                - ( (matriz1[0][1] * matriz1[1][0] * matriz1[2][2]) + (matriz1[0][0] * matriz1[1][2] * matriz1[2][1])
+                + (matriz1[0][2] * matriz1[1][1] * matriz1[2][0]) );
+        return determinante;
+    }
+
+    private void pintar(Double[] Yestimada,JTabbedPane resultados) {
+         // mostramos resultados para la pestaña resultados***********************************************************************
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.white);
         JLabel titulo = new JLabel("Resultados");//creamos el titulo
@@ -123,12 +144,13 @@ public class RegresionMultiple {
         jtable.setInheritsPopupMenu(true);
         jtable.setMinimumSize(new java.awt.Dimension(80, 80));
         String[] titulos = {"X1","X2","Y","Y estimada"};//los titulos de la tabla
-        Double[][] arregloFinal = new Double[N][4];
+        String[][] arregloFinal = new String[N][4];
+        DecimalFormat formato = new DecimalFormat("0.000");
         for(int i=0;i<N;i++){//armamos el arreglo
-            arregloFinal[i][0]= datos[i][0];
-            arregloFinal[i][1]= datos[i][1];
-            arregloFinal[i][2]= datos[i][2];
-            arregloFinal[i][3]= Yestimada[i];
+            arregloFinal[i][0]= datos[i][0]+"";
+            arregloFinal[i][1]= datos[i][1]+"";
+            arregloFinal[i][2]= datos[i][2]+"";
+            arregloFinal[i][3]= formato.format(Yestimada[i]);
         }
         DefaultTableModel TableModel = new DefaultTableModel( arregloFinal, titulos );
         jtable.setModel(TableModel); 
@@ -137,25 +159,38 @@ public class RegresionMultiple {
         jtable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         panel.add(jScrollPane1,BorderLayout.CENTER);
-        JPanel panel2 = new JPanel(new GridLayout(0,4));//creo un panel con rejilla de 4 columnas
+        JPanel panel2 = new JPanel(new GridLayout(0,6));//creo un panel con rejilla de 4 columnas
         JLabel etiquetaN = new JLabel("N");
         JTextField cajaN = new JTextField();
         cajaN.setText(N+"");
+        cajaN.setEditable(false);
+        
         JLabel etiquetaK = new JLabel("K");
         JTextField cajaK = new JTextField();
         cajaK.setText("2");
+        cajaK.setEditable(false);
+        
         JLabel etiquetab0 = new JLabel("b0");
         JTextField cajab0 = new JTextField();
-        cajab0.setText(b0+"");
+        cajab0.setText(formato.format(b0)+"");
+        cajab0.setEditable(false);
+        
         JLabel etiquetab1 = new JLabel("b1");
         JTextField cajab1 = new JTextField();
-        cajab1.setText(b1+"");
+        cajab1.setText(formato.format(b1)+"");
+        cajab1.setEditable(false);
+        
         JLabel etiquetab2 = new JLabel("b2");
         JTextField cajab2 = new JTextField();
-        cajab2.setText(b2+"");
+        cajab2.setText(formato.format(b2)+"");
+        cajab2.setEditable(false);
+        
         JLabel etiquetaSe = new JLabel("Se");
         JTextField cajaSe = new JTextField();
         cajaSe.setText(Se+"");
+        cajaSe.setEditable(false);
+        cajaSe.setAutoscrolls(true);
+        
         panel2.add(etiquetaN);
         panel2.add(cajaN);
         panel2.add(etiquetaK);
@@ -239,24 +274,6 @@ public class RegresionMultiple {
         dataset.addSeries(series1);
         dataset.addSeries(series2);
         return dataset;
-    }
-    private void inicializarArreglos() {
-        for(int i=0;i<9;i++)
-            sumatorias[i]=0.0;
-        for(int i=0;i<N;i++){
-            for(int j=0;j<6;j++){
-                auxiliar[i][j]=0.0;
-            }
-        }
-    }
-    
-    public Double calDeterminante (Double[][] matriz1) {
-        Double determinante = ((matriz1[0][0] * matriz1[1][1] * matriz1[2][2]) + 
-                (matriz1[0][1] * matriz1[1][2] * matriz1[2][0]) + 
-                (matriz1[0][2] * matriz1[1][0] * matriz1[2][1]) )
-                - ( (matriz1[0][1] * matriz1[1][0] * matriz1[2][2]) + (matriz1[0][0] * matriz1[1][2] * matriz1[2][1])
-                + (matriz1[0][2] * matriz1[1][1] * matriz1[2][0]) );
-        return determinante;
     }
 
 }
