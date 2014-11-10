@@ -583,17 +583,15 @@ public class EstadisticaDescriptiva {
 //agregar los valores a la grafica
         for (int i = 0; i < INTERVALOS; i++) {
             
-            Datos.addValue(tablaComplete[i][5],"Intervalo" + i ,"" + tablaComplete[i][1] + " - " + tablaComplete[i][2] );
-            System.out.println("" + Datos);
+            Datos.addValue(tabla[i][3],"frecuencia",tabla[i][1]+" - "+tabla[i][2]);
         }
        
        Grafica =  ChartFactory.createLineChart("Histograma", "Frecuencia", "Li Ls", Datos,       
        PlotOrientation.VERTICAL,true,true,false);
        
-       JPanel p = new JPanel();
-       //p.add(Grafica);
+       ChartPanel p = new ChartPanel(Grafica);
         
-        panel1.addTab("Grafica", p);
+        
         
         
         // termina seccion de grafica
@@ -603,6 +601,7 @@ public class EstadisticaDescriptiva {
         panel.add(medidas, BorderLayout.SOUTH);
         //panel.add(jScrollPane1, BorderLayout.CENTER); 
         panel1.addTab("Resultados", panel);
+        panel1.addTab("Grafica", p);
     }
 
     private String[][] formato(Double[][] tabla) {
