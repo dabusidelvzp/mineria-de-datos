@@ -19,6 +19,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -169,9 +178,50 @@ public class RegresionSimple {
         panel2.add(cajab1);
         panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
         resultados.addTab("resultado", panel);
+        // ***********************************************************************
+        JPanel graficas = new JPanel(new GridLayout(0,1));
+        XYDataset dataset = createSampleDataset();
+        JFreeChart chart = ChartFactory.createXYLineChart(
+            "Grafica",
+            "X",
+            "Y",
+            dataset,
+            PlotOrientation.VERTICAL,
+            true,
+            false,
+            false
+        );
+        XYPlot plot = (XYPlot) chart.getPlot();
+        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, true);
+        renderer.setSeriesShapesVisible(0, true);
+        renderer.setSeriesLinesVisible(1, true);
+        renderer.setSeriesShapesVisible(1, true);        
+        plot.setRenderer(renderer);
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+        graficas.add(chartPanel);//agregamos la primer grafica
+        resultados.addTab("Graficas", graficas);
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+    private XYDataset createSampleDataset() {
+        XYSeries series1 = new XYSeries("X-Y");
+        for(int i=0;i<datos.length;i++){
+                series1.add(datos[i][0], datos[i][1]);
+        }
+        
+        XYSeries series2 = new XYSeries("X-Y estimada");
+        for(int i=0;i<datos.length;i++){
+                series2.add(datos[i][0], yEstimada[i]);
+        }
+        
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+        dataset.addSeries(series2);
+        return dataset;
     }
     
 }
