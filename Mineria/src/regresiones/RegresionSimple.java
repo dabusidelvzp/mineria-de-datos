@@ -103,8 +103,11 @@ public class RegresionSimple {
            b1 = ((sumatorias[2]*N)-sumatorias[0]*sumatorias[1])/((sumatorias[3]*N)-(sumatorias[0]*sumatorias[0]));
            b0 = (sumatorias[1]/N)- ((b1 * sumatorias[0])/N);
 
-
-
+           // Y ESTIMADA
+           for(int i = 0; i < N ; i++){
+           yEstimada[i] = b0 + (b1 *datos[i][0]);
+           }
+            
 
            System.out.println("sum x: " + sumatorias[0]);
            System.out.println("sum y: " + sumatorias[1]);
@@ -129,12 +132,13 @@ public class RegresionSimple {
         jtable.setCursor(new java.awt.Cursor(java.awt.Cursor.N_RESIZE_CURSOR));
         jtable.setInheritsPopupMenu(true);
         jtable.setMinimumSize(new java.awt.Dimension(80, 80));
-        String[] titulos = {"Xi*Yi","X2","Y2"};//los titulos de la tabla
+        String[] titulos = {"Xi*Yi","X2","Y2","Y estimada"};//los titulos de la tabla
         Double[][] arregloFinal = new Double[N][4];
         for(int i=0;i<N;i++){//armamos el arreglo
             arregloFinal[i][0]= xiyi[i];
             arregloFinal[i][1]= x2[i];
-            arregloFinal[i][3]= y2[i];
+            arregloFinal[i][2]= y2[i];
+            arregloFinal[i][3]= yEstimada[i];
         }
         DefaultTableModel TableModel = new DefaultTableModel( arregloFinal, titulos );
         jtable.setModel(TableModel); 
@@ -171,3 +175,6 @@ public class RegresionSimple {
     }
     
 }
+
+
+
