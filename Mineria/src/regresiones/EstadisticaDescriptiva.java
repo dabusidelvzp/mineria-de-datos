@@ -7,12 +7,15 @@ package regresiones;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
+import java.awt.Panel;
 import static java.lang.Math.floor;
 import static java.lang.Math.log;
 import static java.lang.Math.log10;
 import static java.lang.Math.round;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,6 +23,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -58,6 +68,7 @@ public class EstadisticaDescriptiva {
     private Integer AUXFA;
 
     private Double[][] datos;
+    private Double[][] tablaComplete;
 
     public EstadisticaDescriptiva(Double[][] d) {
 
@@ -93,7 +104,10 @@ public class EstadisticaDescriptiva {
         MEDIA = Media(tabla);
         System.out.println("Media : " + MEDIA);
         //rellenamos la matriz
+        tablaComplete  =rellenar(tabla);
+        
         Double[][] tablaCompleta = rellenar(tabla);
+        
         //mediana
         MEDIANA = Mediana(tablaCompleta);
         System.out.println("MEDIANA: " + MEDIANA);
@@ -107,7 +121,7 @@ public class EstadisticaDescriptiva {
         VARIANZA = Varianza(tablaCompleta);
         System.out.println("VARIANZA: " + VARIANZA);
         //Desviacion estandart
-        
+
         System.out.println("Desviacion: " + Math.sqrt(VARIANZA));
         DE = Math.sqrt(VARIANZA);
         //pintar
@@ -310,7 +324,7 @@ public class EstadisticaDescriptiva {
         System.out.println("CReando matriz");
         Double[][] auxiliar = new Double[INTERVALOS][10];
         try {
-        //INTERVALOS
+            //INTERVALOS
             //LLenamos la primer fila
             auxiliar[0][0] = LIPI;
             auxiliar[0][1] = auxiliar[0][0] + AMPLITUD;
@@ -437,6 +451,7 @@ public class EstadisticaDescriptiva {
         String[] titulos = {"i", "Li", "Ls", "Xi", "Fi", "Fa", "Fr", "Fra", "XiFi", "|Xi-X|Fi", "(Xi-X)^2 Fi"};//los titulos de la tabla
         DefaultTableModel TableModel = new DefaultTableModel(formato(tabla), titulos);
         jtable.setModel(TableModel);
+
         JScrollPane jScrollPane1 = new JScrollPane();
         jScrollPane1.setViewportView(jtable);
         jtable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -464,105 +479,129 @@ public class EstadisticaDescriptiva {
         JTextField cajaRango = new JTextField();
         cajaRango.setText(MAXIMO - MINIMO + "");
         cajaRango.setEditable(false);
-        
+
         JLabel etiquetaIntervalos = new JLabel("Intervalos");
         JTextField cajaIntervalos = new JTextField();
         cajaIntervalos.setText(INTERVALOS + "");
         cajaIntervalos.setEditable(false);
-        
+
         JLabel etiquetaAmp = new JLabel("Amplitud");
         JTextField cajaAmp = new JTextField();
         cajaAmp.setText(AMPLITUD + "");
         cajaAmp.setEditable(false);
-        
+
         JLabel etiquetaRamp = new JLabel("Rango Ampliado");
         JTextField cajaRamp = new JTextField();
         cajaRamp.setText(RANGOAMPLIADO + "");
         cajaRamp.setEditable(false);
-        
+
         JLabel etiquetaDifRam = new JLabel("Dif Rangos");
         JTextField cajaDifRam = new JTextField();
         cajaDifRam.setText(DIFERENCIARANGOS + "");
         cajaDifRam.setEditable(false);
-        
-         JLabel etiquetaLIPI = new JLabel("LIPI");
+
+        JLabel etiquetaLIPI = new JLabel("LIPI");
         JTextField cajaLIPI = new JTextField();
         cajaLIPI.setText(LIPI + "");
         cajaLIPI.setEditable(false);
-        
-         JLabel etiquetaLSUI = new JLabel("LSUI");
+
+        JLabel etiquetaLSUI = new JLabel("LSUI");
         JTextField cajaLSUI = new JTextField();
         cajaLSUI.setText(LSUI + "");
         cajaLSUI.setEditable(false);
-        
-         JLabel etiquetaDM = new JLabel("Desv media");
+
+        JLabel etiquetaDM = new JLabel("Desv media");
         JTextField cajaDM = new JTextField();
         cajaDM.setText(DM + "");
         cajaDM.setEditable(false);
-        
+
         JLabel etiquetaV = new JLabel("Varianza");
         JTextField cajaV = new JTextField();
         cajaV.setText(VARIANZA + "");
         cajaV.setEditable(false);
-        
+
         JLabel etiquetaDE = new JLabel("Desv estandar");
         JTextField cajaDE = new JTextField();
-        cajaDE.setText(DE + "");        
+        cajaDE.setText(DE + "");
         cajaDE.setEditable(false);
-        
+
         JLabel etiquetaMe = new JLabel("Media");
         JTextField cajaMe = new JTextField();
-        cajaMe.setText(MEDIA + "");        
+        cajaMe.setText(MEDIA + "");
         cajaMe.setEditable(false);
-        
+
         JLabel etiquetaMEDIANA = new JLabel("Mediana");
         JTextField cajaMEDIANA = new JTextField();
-        cajaMEDIANA.setText(MEDIANA + "");        
+        cajaMEDIANA.setText(MEDIANA + "");
         cajaMEDIANA.setEditable(false);
-        
+
         JLabel etiquetaModa = new JLabel("Moda");
         JTextField cajaModa = new JTextField();
-        cajaModa.setText(MODA + "");        
+        cajaModa.setText(MODA + "");
         cajaModa.setEditable(false);
-        
-        
-        
+
         medidas.add(etiquetaMax);
-        medidas.add(cajaMax);       
+        medidas.add(cajaMax);
         medidas.add(etiquetaMin);
-        medidas.add(cajaMin);    
+        medidas.add(cajaMin);
         medidas.add(etiquetaN);
         medidas.add(cajaN);
-             
+
         medidas.add(etiquetaRango);
         medidas.add(cajaRango); //Jhony        
         medidas.add(etiquetaIntervalos);
         medidas.add(cajaIntervalos);
         medidas.add(etiquetaAmp);
         medidas.add(cajaAmp);
-         medidas.add(etiquetaRamp);
+        medidas.add(etiquetaRamp);
         medidas.add(cajaRamp);
-         medidas.add(etiquetaDifRam);
-        medidas.add(cajaDifRam); 
-         medidas.add(etiquetaLIPI); //lipi
+        medidas.add(etiquetaDifRam);
+        medidas.add(cajaDifRam);
+        medidas.add(etiquetaLIPI); //lipi
         medidas.add(cajaLIPI);
-        
-         medidas.add(etiquetaLSUI);
-        medidas.add(cajaLSUI);
-         medidas.add(etiquetaDM); //DESVIACION MEDIA
-        medidas.add(cajaDM);
-         medidas.add(etiquetaV);   //VARIANZA
-        medidas.add(cajaV);
-         medidas.add(etiquetaDE); //DESVIACION ESTANDAR
-        medidas.add(cajaDE);
-         medidas.add(etiquetaMe); //MEDIA
-        medidas.add(cajaMe);
-         medidas.add(etiquetaMEDIANA);  // mediana
-        medidas.add(cajaMEDIANA);
-         medidas.add(etiquetaModa);  //moda
-        medidas.add(cajaModa);
 
+        medidas.add(etiquetaLSUI);
+        medidas.add(cajaLSUI);
+        medidas.add(etiquetaDM); //DESVIACION MEDIA
+        medidas.add(cajaDM);
+        medidas.add(etiquetaV);   //VARIANZA
+        medidas.add(cajaV);
+        medidas.add(etiquetaDE); //DESVIACION ESTANDAR
+        medidas.add(cajaDE);
+        medidas.add(etiquetaMe); //MEDIA
+        medidas.add(cajaMe);
+        medidas.add(etiquetaMEDIANA);  // mediana
+        medidas.add(cajaMEDIANA);
+        medidas.add(etiquetaModa);  //moda
+        medidas.add(cajaModa);
+        //SECCION DE GRAFICAS
+                
+        JFreeChart Grafica;
+        DefaultCategoryDataset Datos = new DefaultCategoryDataset();
+        //Buscar las pociciones de  LI       LS      Fa
+        //                         0,1      0,2     0,5
+//agregar los valores a la grafica
+        for (int i = 0; i < INTERVALOS; i++) {
+            
+            Datos.addValue(tablaComplete[i][5],"Intervalo" + i ,"" + tablaComplete[i][1] + " - " + tablaComplete[i][2] );
+            System.out.println("" + Datos);
+        }
+       
+       Grafica =  ChartFactory.createLineChart("Histograma", "Frecuencia", "Li Ls", Datos,       
+       PlotOrientation.VERTICAL,true,true,false);
+       
+       JPanel p = new JPanel();
+       //p.add(Grafica);
+        
+        panel1.addTab("Grafica", p);
+        
+        
+        // termina seccion de grafica
+        
+        
+        
         panel.add(medidas, BorderLayout.SOUTH);
+        //panel.add(jScrollPane1, BorderLayout.CENTER); 
         panel1.addTab("Resultados", panel);
     }
 
@@ -577,7 +616,7 @@ public class EstadisticaDescriptiva {
             for (int i = 0; i < nueva.length; i++) {
                 for (int j = 1; j < nueva[0].length; j++) {
                     if (j == 6 || j == 7) {
-                        nueva[i][j] = formato.format(tabla[i][j - 1] * 100) + "%";
+                        nueva[i][j] = formato.format(tabla[i][j - 1] * 100) + "%";   //----------------------------------------
                     } else {
                         nueva[i][j] = formato.format(tabla[i][j - 1]) + "";
                     }
