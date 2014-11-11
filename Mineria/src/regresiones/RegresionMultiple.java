@@ -115,7 +115,7 @@ public class RegresionMultiple {
        }
        //calculamos Se
        Se =Math.sqrt(Math.pow(sumatorias[8], 2)/(N-2-1));
-        pintar(Yestimada,resultados);
+        pintar(Yestimada,resultados,auxiliar);
         }catch(Exception e) {
             e.printStackTrace();
         }
@@ -130,7 +130,7 @@ public class RegresionMultiple {
         return determinante;
     }
 
-    private void pintar(Double[] Yestimada,JTabbedPane resultados) {
+    private void pintar(Double[] Yestimada,JTabbedPane resultados,Double[][] auxiliar) {
          // mostramos resultados para la pestaña resultados***********************************************************************
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.white);
@@ -143,14 +143,19 @@ public class RegresionMultiple {
         jtable.setCursor(new java.awt.Cursor(java.awt.Cursor.N_RESIZE_CURSOR));
         jtable.setInheritsPopupMenu(true);
         jtable.setMinimumSize(new java.awt.Dimension(80, 80));
-        String[] titulos = {"X1","X2","Y","Y estimada"};//los titulos de la tabla
-        String[][] arregloFinal = new String[N][4];
+        String[] titulos = {"X1","X2","Y","Y estimada","X1^2","X2^2","X1*Y","X2*Y","Y-Y estimada"};//los titulos de la tabla
+        String[][] arregloFinal = new String[N][9];
         DecimalFormat formato = new DecimalFormat("0.000");
         for(int i=0;i<N;i++){//armamos el arreglo
             arregloFinal[i][0]= datos[i][0]+"";
             arregloFinal[i][1]= datos[i][1]+"";
             arregloFinal[i][2]= datos[i][2]+"";
             arregloFinal[i][3]= formato.format(Yestimada[i]);
+            arregloFinal[i][4] = formato.format(auxiliar[i][0]);
+            arregloFinal[i][5] = formato.format(auxiliar[i][1]);
+            arregloFinal[i][6] = formato.format(auxiliar[i][2]);
+            arregloFinal[i][7] = formato.format(auxiliar[i][3]);
+            arregloFinal[i][8] = formato.format(auxiliar[i][4]);
         }
         DefaultTableModel TableModel = new DefaultTableModel( arregloFinal, titulos );
         jtable.setModel(TableModel); 
