@@ -9,18 +9,26 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import static java.lang.Math.floor;
 import static java.lang.Math.log;
 import static java.lang.Math.log10;
 import static java.lang.Math.round;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTable.PrintMode;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
@@ -35,7 +43,7 @@ import org.jfree.data.general.DefaultPieDataset;
  *
  * @author hazel
  */
-public class EstadisticaDescriptiva {
+public class EstadisticaDescriptiva implements ActionListener{
 
     private Integer N;
     private Double MAXIMO;
@@ -69,6 +77,7 @@ public class EstadisticaDescriptiva {
 
     private Double[][] datos;
     private Double[][] tablaComplete;
+    private JTable jtable;
 
     public EstadisticaDescriptiva(Double[][] d) {
 
@@ -441,7 +450,7 @@ public class EstadisticaDescriptiva {
     private void pintar(JTabbedPane panel1, Double[][] tabla) {
         JPanel panel = new JPanel(new BorderLayout());
         //tabla
-        JTable jtable = new JTable();//creamos la tabla a mostrar
+        jtable = new JTable();//creamos la tabla a mostrar
         jtable.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
         jtable.setFont(new java.awt.Font("Arial", 1, 14));
         jtable.setColumnSelectionAllowed(true);
@@ -540,6 +549,9 @@ public class EstadisticaDescriptiva {
         cajaModa.setText(MODA + "");
         cajaModa.setEditable(false);
 
+        JButton boton = new JButton("imprimir");
+        boton.addActionListener(this);
+        
         medidas.add(etiquetaMax);
         medidas.add(cajaMax);
         medidas.add(etiquetaMin);
@@ -574,6 +586,7 @@ public class EstadisticaDescriptiva {
         medidas.add(cajaMEDIANA);
         medidas.add(etiquetaModa);  //moda
         medidas.add(cajaModa);
+        medidas.add(boton);
         //SECCION DE GRAFICAS
                 
         JFreeChart Grafica;
@@ -626,5 +639,19 @@ public class EstadisticaDescriptiva {
         }
         return nueva;
     }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+         try {   MessageFormat headerFormat = new MessageFormat("MI CABECERA");
+        MessageFormat footerFormat = new MessageFormat("- Página {0} -");
+        
+            jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);
+        } catch (PrinterException ex) {
+            Logger.getLogger(RegresionSimple.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    
 
 }

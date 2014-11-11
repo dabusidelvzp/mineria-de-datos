@@ -11,14 +11,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,6 +33,13 @@ import javax.swing.JTable;
 import javax.swing.JTable.PrintMode;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.Document;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -41,7 +54,11 @@ import org.jfree.data.xy.XYSeriesCollection;
  *
  * @author hazel
  */
-public class RegresionSimple {
+public class RegresionSimple implements ActionListener {
+
+    private static void paint(Graphics2D g2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     private int N;
     private Double[][] datos;
     private Double[] sumatorias;
@@ -60,6 +77,8 @@ public class RegresionSimple {
     private Double mediay;
     private Double redondeoSumatoriax2;
     private Double redondeoSumatoriay2;
+    
+    private  JTable jtable;
     public RegresionSimple(Double[][] d){
         N = d.length;
         datos = d;
@@ -142,7 +161,7 @@ public class RegresionSimple {
         panel.setBackground(Color.white);
         JLabel titulo = new JLabel("Resultados");//creamos el titulo
         panel.add(titulo,BorderLayout.PAGE_START);//lo agregamos al inicio
-        JTable jtable = new JTable();//creamos la tabla a mostrar
+       jtable = new JTable();//creamos la tabla a mostrar
         jtable.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
         jtable.setFont(new java.awt.Font("Arial", 1, 14)); 
         jtable.setColumnSelectionAllowed(true);
@@ -186,6 +205,8 @@ public class RegresionSimple {
         JLabel etiquetaR = new JLabel("R");
         JTextField cajaR = new JTextField();
         cajaR.setText(r+"");
+        JButton boton = new JButton("imprimir");
+        boton.addActionListener(this);
         panel2.add(etiquetaN);
         panel2.add(cajaN);
         panel2.add(etiquetab0);
@@ -200,6 +221,7 @@ public class RegresionSimple {
         panel2.add(cajady);
         panel2.add(etiquetaR);
         panel2.add(cajaR);
+        panel2.add(boton);
         panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
         resultados.addTab("resultado", panel);
         // ***********************************************************************
@@ -226,12 +248,12 @@ public class RegresionSimple {
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
         graficas.add(chartPanel);//agregamos la primer grafica
         resultados.addTab("Graficas", graficas);
-        
         //IMPRIMIR JTABLE
        /* MessageFormat headerFormat = new MessageFormat("MI CABECERA");
         MessageFormat footerFormat = new MessageFormat("- Página {0} -");
         jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);
         */
+        
         
         }catch(Exception e){
             e.printStackTrace();
@@ -254,7 +276,34 @@ public class RegresionSimple {
         dataset.addSeries(series2);
         return dataset;
     }
-   
+
+    	
+   /* private void reporte(Double datos[][]){
+        try{
+            //(JasperReport ) JRLoader.loadObject("reporte2.jasper")
+        JasperReport reporte  =  (JasperReport) JRLoader.loadObjectFromFile("reporte2.jasper");
+            JasperPrint jasperPrint = JasperFillManager.fillReport("reporte", this.datos,this.datos);
+        }catch(Exception e){
+            
+        }
+    }*/
+    
+    
+    
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+         try {   MessageFormat headerFormat = new MessageFormat("MI CABECERA");
+        MessageFormat footerFormat = new MessageFormat("- Página {0} -");
+        
+            jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);
+        } catch (PrinterException ex) {
+            Logger.getLogger(RegresionSimple.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+
     
 }
 
