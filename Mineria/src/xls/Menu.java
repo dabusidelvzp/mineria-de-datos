@@ -6,6 +6,12 @@
 
 package xls;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import org.jfree.ui.ExtensionFileFilter;
+
 
 /**
  *
@@ -18,6 +24,8 @@ public class Menu extends javax.swing.JFrame {
      */
     public Menu() {
         initComponents();
+        FileFilter filter1 = new ExtensionFileFilter("excel", "xls");
+        this.jFileChooser1.setFileFilter(filter1);
     }
 
     /**
@@ -90,13 +98,16 @@ public class Menu extends javax.swing.JFrame {
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 686, Short.MAX_VALUE)
+            .addGap(0, 691, Short.MAX_VALUE)
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 579, Short.MAX_VALUE)
         );
 
+        jFileChooser1.setAcceptAllFileFilterUsed(false);
+        jFileChooser1.setAutoscrolls(true);
+        jFileChooser1.setDragEnabled(true);
         jFileChooser1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 jFileChooser1MouseDragged(evt);
@@ -181,9 +192,9 @@ public class Menu extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jFileChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jDesktopPane1))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,14 +207,14 @@ public class Menu extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        TablaExcel tabla= new TablaExcel("Regresion simple",2);
+        TablaExcel tabla= new TablaExcel("Regresion simple",2,null);
             this.jDesktopPane1.add(tabla);
             tabla.show();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
             // TODO add your handling code here:
-            TablaExcel tabla= new TablaExcel("Estadistica descriptiva",1);
+            TablaExcel tabla= new TablaExcel("Estadistica descriptiva",1,null);
             this.jDesktopPane1.add(tabla);
             tabla.show();
                 
@@ -216,7 +227,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         // TODO add your handling code here:
-        TablaExcel tabla= new TablaExcel("Regresion multiple",3);
+        TablaExcel tabla= new TablaExcel("Regresion multiple",3,null);
             this.jDesktopPane1.add(tabla);
             tabla.show();
             
@@ -249,7 +260,38 @@ public class Menu extends javax.swing.JFrame {
 
     private void jFileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooser1ActionPerformed
         // TODO add your handling code here:
-   
+        if(evt.getActionCommand() == JFileChooser.APPROVE_SELECTION){
+                String seleccion =(String) JOptionPane.showInputDialog(
+                 this,
+                 "Seleccione opcion",
+                 "Selector de opciones",
+                 JOptionPane.QUESTION_MESSAGE,
+                 null,  // null para icono defecto
+                 new Object[] { "Estadistica Descriptiva", "Regresión Simple", "Regresión Multiple" },
+                 "Estadistica Descriptiva");
+             if(seleccion == null ){
+                 JOptionPane.showMessageDialog(rootPane, "Operación cancelada");
+             }else {
+                 if(seleccion.equals("Estadistica Descriptiva")) {
+                      File archivo = this.jFileChooser1.getSelectedFile();
+                      TablaExcel tabla= new TablaExcel("Estadistica descriptiva",1,archivo);
+                        this.jDesktopPane1.add(tabla);
+                        tabla.show();
+                 } else if(seleccion.equals("Regresión Simple")) {
+                      File archivo = this.jFileChooser1.getSelectedFile();
+                      TablaExcel tabla= new TablaExcel("Regresion simple",2,archivo);
+                        this.jDesktopPane1.add(tabla);
+                        tabla.show();
+                      
+                 }else if(seleccion.equals("Regresión Multiple")) {
+                     File archivo = this.jFileChooser1.getSelectedFile();
+                     TablaExcel tabla= new TablaExcel("Regresion multiple",3,archivo);
+                     this.jDesktopPane1.add(tabla);
+                     tabla.show();
+                 }
+             } 
+        }
+        
     }//GEN-LAST:event_jFileChooser1ActionPerformed
 
     private void jFileChooser1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jFileChooser1MouseDragged

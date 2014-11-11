@@ -28,12 +28,16 @@ public class LlamarExcel implements DropTargetListener{
     private Integer columnas =0;
     private JTabbedPane p1;
     
-    public LlamarExcel( JTable jtable ,Integer c,JTabbedPane pestana){
+    public LlamarExcel( JTable jtable ,Integer c,JTabbedPane pestana,File archivo){
         this.jtable = jtable;
         this.columnas=c;
         p1 = pestana;
         
         dt = new DropTarget( jtable , this );  
+        
+        if(archivo!= null){
+            archivoTransferido(archivo);
+        }
         
     }
     
@@ -64,7 +68,7 @@ public class LlamarExcel implements DropTargetListener{
                     java.util.List list = (java.util.List) tr.getTransferData( flavors[0] );                    
                     if( !list.isEmpty() ){ /* abre el primer archivo */                        
                         File file = new File( list.get(0).toString() );
-                        if ( file.exists() ){     
+                        if ( file.exists() ){    
                             /* SI el archivo corresponde a un archivo excel */
                             if( file.getName().endsWith("xls") )
                             {
@@ -174,6 +178,22 @@ public class LlamarExcel implements DropTargetListener{
         } catch (BiffException ex) {
             System.err.println( ex.getMessage() );
         }
+  }
+  
+  public void archivoTransferido(File archivo) {
+                        File file = archivo;
+                        System.out.println("entró");
+                        if ( file.exists() ){     
+                            /* SI el archivo corresponde a un archivo excel */
+                            if( file.getName().endsWith("xls") )
+                            {
+                                readXLS( file );
+                            }else{
+                                JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es xls","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
+                                
+                            }                            
+                        }else{ System.err.println( "error archivo no existe " ); }
+                   
   }
   
   public DefaultTableModel getTableModel()

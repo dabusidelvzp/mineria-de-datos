@@ -6,6 +6,8 @@
 
 package xls;
 
+import java.io.File;
+
 /**
  *
  * @author hazel
@@ -15,11 +17,11 @@ public class TablaExcel extends javax.swing.JInternalFrame {
     /**
      * Creates new form TablaExcel
      */
-    public TablaExcel(String titulo,Integer columnas) {
+    public TablaExcel(String titulo,Integer columnas,File archivo) {
         LlamarExcel de;
         initComponents();
         this.jLabel1.setText(titulo);
-        de = new LlamarExcel( jTable1, columnas ,this.jTabbedPane1);
+        de = new LlamarExcel( jTable1, columnas ,this.jTabbedPane1,archivo);
     }
 
     /**
