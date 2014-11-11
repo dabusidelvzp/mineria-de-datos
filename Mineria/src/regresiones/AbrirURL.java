@@ -11,6 +11,10 @@ import java.net.URI;
 
 public class AbrirURL {
 	public static void main(String[] a)throws Exception {
-		Desktop.getDesktop().browse(new URI("http://issuu.com/robotronwi/docs/manual_de_usuario_web_icc"));
+            try{
+		Desktop.getDesktop().browse(new URI("http://issuu.com/robotronwi/docs/guia_c4c844641a30ef"));
+            }catch(Exception e){
+                        
+                        }
 	}
 }

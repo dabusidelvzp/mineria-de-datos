@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -280,9 +281,10 @@ public class RegresionSimple implements ActionListener {
     	
    /* private void reporte(Double datos[][]){
         try{
+            ArrayList a  = new ArrayList();
             //(JasperReport ) JRLoader.loadObject("reporte2.jasper")
         JasperReport reporte  =  (JasperReport) JRLoader.loadObjectFromFile("reporte2.jasper");
-            JasperPrint jasperPrint = JasperFillManager.fillReport("reporte", this.datos,this.datos);
+            JasperPrint jasperPrint = JasperFillManager.fillReport("reporte",reporte);
         }catch(Exception e){
             
         }

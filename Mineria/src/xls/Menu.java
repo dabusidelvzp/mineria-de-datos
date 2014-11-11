@@ -6,7 +6,12 @@
 
 package xls;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -52,7 +57,6 @@ public class Menu extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
 
         jMenu4.setText("jMenu4");
 
@@ -90,7 +94,7 @@ public class Menu extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Mineria de datos");
+        setTitle("Minero 2.1");
 
         jDesktopPane1.setBackground(java.awt.Color.lightGray);
 
@@ -166,22 +170,13 @@ public class Menu extends javax.swing.JFrame {
         jMenu2.setText("Ayuda");
 
         jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem4.setText("Página de inicio");
+        jMenuItem4.setText("Manual");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
         jMenu2.add(jMenuItem4);
-
-        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem5.setText("About");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItem5);
 
         jMenuBar1.add(jMenu2);
 
@@ -234,29 +229,12 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-        
-         /*Inicio tabla= new Inicio();
-            this.jDesktopPane1.add(tabla);
-            tabla.show();
-           */ 
-            //    Inicio tabla= new Inicio();
-            //this.jDesktopPane1.add(tabla);
-            //tabla.show();
-        
-        /*if(jMenuItem4.getActionCommand().equals("Página de inicio")){
-            Inicio inicio = new Inicio();
-            inicio.setVisible(true);
-        }
-        */
-               
-            
-        
+           try{
+		Desktop.getDesktop().browse(new URI("http://issuu.com/robotronwi/docs/guia_c4c844641a30ef"));
+            }catch(Exception e){
+                        
+                        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
-
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jFileChooser1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFileChooser1ActionPerformed
         // TODO add your handling code here:
@@ -349,7 +327,6 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem9;
     // End of variables declaration//GEN-END:variables
 }

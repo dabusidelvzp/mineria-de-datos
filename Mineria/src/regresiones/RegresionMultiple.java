@@ -11,7 +11,11 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -48,6 +52,8 @@ public class RegresionMultiple implements ActionListener{
     private JButton boton;
     private JComboBox combo;
     JTable jtable2;
+    String[][] arregloFinal;
+    JTable jtable;
     
     public RegresionMultiple(Double[][] d){
         N=0;
@@ -146,7 +152,7 @@ public class RegresionMultiple implements ActionListener{
         panel.setBackground(Color.white);
         JLabel titulo = new JLabel("Resultados");//creamos el titulo
         panel.add(titulo,BorderLayout.PAGE_START);//lo agregamos al inicio
-        JTable jtable = new JTable();//creamos la tabla a mostrar
+        jtable = new JTable();//creamos la tabla a mostrar
         jtable.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
         jtable.setFont(new java.awt.Font("Arial", 1, 14)); 
         jtable.setColumnSelectionAllowed(true);
@@ -154,7 +160,7 @@ public class RegresionMultiple implements ActionListener{
         jtable.setInheritsPopupMenu(true);
         jtable.setMinimumSize(new java.awt.Dimension(80, 80));
         String[] titulos = {"X1","X2","Y","Y estimada","X1^2","X2^2","X1*Y","X2*Y","Y-Y estimada"};//los titulos de la tabla
-        String[][] arregloFinal = new String[N][9];
+        arregloFinal = new String[N][9];
         DecimalFormat formato = new DecimalFormat("0.000");
         for(int i=0;i<N;i++){//armamos el arreglo
             arregloFinal[i][0]= datos[i][0]+"";
@@ -206,6 +212,9 @@ public class RegresionMultiple implements ActionListener{
         cajaSe.setEditable(false);
         cajaSe.setAutoscrolls(true);
         
+        JButton botonI = new JButton("imprimir");
+        botonI.addActionListener(this);
+        
         panel2.add(etiquetaN);
         panel2.add(cajaN);
         panel2.add(etiquetaK);
@@ -219,6 +228,7 @@ public class RegresionMultiple implements ActionListener{
         panel2.add(cajab2); 
         panel2.add(etiquetaSe);
         panel2.add(cajaSe);
+        panel2.add(botonI);
         panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
         resultados.addTab("resultado", panel);
         //**************************************************************************************
@@ -350,8 +360,21 @@ public class RegresionMultiple implements ActionListener{
             }else {
                 JOptionPane.showMessageDialog(null, "Valores no validos.");
             }
+            System.out.println("imprimir"+ e.getActionCommand());
+            
+            
             
         }
+        if(e.getActionCommand().equals("imprimir")) {
+                
+                 try {   MessageFormat headerFormat = new MessageFormat("MI CABECERA");
+                    MessageFormat footerFormat = new MessageFormat("- Página {0} -");
+
+                        jtable.print(JTable.PrintMode.FIT_WIDTH, headerFormat, footerFormat);
+                    } catch (PrinterException ex) {
+                        Logger.getLogger(RegresionSimple.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
     }
     
     public boolean isDouble(String cadena){
