@@ -9,8 +9,13 @@ package regresiones;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -26,18 +31,23 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
+import org.apache.commons.math3.distribution.TDistribution;
 /**
  *
  * @author hazel
  */
-public class RegresionMultiple {
+public class RegresionMultiple implements ActionListener{
     private Integer N;
     private Double b0;
     private Double b1;
     private Double b2;
     private Double Se;
     private Double[][] datos;
+    private JTextField cajaVariableX1;
+    private JTextField cajaVariableX2;
+    private JButton boton;
+    private JComboBox combo;
+    JTable jtable2;
     
     public RegresionMultiple(Double[][] d){
         N=0;
@@ -212,10 +222,47 @@ public class RegresionMultiple {
         panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
         resultados.addTab("resultado", panel);
         //**************************************************************************************
+        //intervalos de confianza
+        JPanel intervalos= new JPanel(new BorderLayout());
+        JPanel variables = new JPanel(new GridLayout(0,2));
+        JLabel variableX1 = new JLabel("X1");
+        cajaVariableX1 = new JTextField();
+        JLabel variableX2 = new JLabel("X2");
+        cajaVariableX2 = new JTextField();
+        boton = new JButton("calcular");
+        boton.addActionListener(this);
+        JLabel variableEfectividad = new JLabel("Efectividad");
+        String[] efectividades = {"80","85","90","95","99"};
+        combo = new JComboBox(efectividades);
+        variables.add(variableX1);
+        variables.add(cajaVariableX1);
+        variables.add(variableX2);
+        variables.add(cajaVariableX2);
+        variables.add(variableEfectividad);
+        variables.add(combo);
+        variables.add(boton);
+        intervalos.add(variables, BorderLayout.NORTH);
+        jtable2 = new JTable();//creamos la tabla a mostrar
+        jtable2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
+        jtable2.setFont(new java.awt.Font("Arial", 1, 14)); 
+        jtable2.setColumnSelectionAllowed(true);
+        jtable2.setCursor(new java.awt.Cursor(java.awt.Cursor.N_RESIZE_CURSOR));
+        jtable2.setInheritsPopupMenu(true);
+        jtable2.setMinimumSize(new java.awt.Dimension(80, 80));
+        String[] titulos2 = {"Y estimada","Li","Ls"};//los titulos de la tabla
+        String[][] pruebaIntervalos = {{"","",""}};
+        DefaultTableModel TableModel2 = new DefaultTableModel( pruebaIntervalos, titulos2 );
+        jtable2.setModel(TableModel2); 
+        JScrollPane jScrollPane2 = new JScrollPane();
+        jScrollPane2.setViewportView(jtable2);
+        jtable2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        intervalos.add(jScrollPane2,BorderLayout.CENTER);
+        resultados.addTab("intervalos", intervalos);
+        //***************************************************************************
         JPanel graficas = new JPanel(new GridLayout(0,1));
-        XYDataset dataset = createSampleDataset(null);
+        XYDataset dataset = createSampleDataset(Yestimada,1);
         JFreeChart chart = ChartFactory.createXYLineChart(
-            "Grafica 1",
+            "Grafica 1 - X1",
             "X",
             "Y",
             dataset,
@@ -235,9 +282,9 @@ public class RegresionMultiple {
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
         graficas.add(chartPanel);//agregamos la primer grafica
         //********** creamos la segunda grafica
-        XYDataset dataset2 = createSampleDataset(Yestimada);
+        XYDataset dataset2 = createSampleDataset(Yestimada,2);
         JFreeChart chart2 = ChartFactory.createXYLineChart(
-            "Grafica 2",
+            "Grafica 2 -X2",
             "X",
             "Y",
             dataset2,
@@ -258,19 +305,19 @@ public class RegresionMultiple {
         graficas.add(chartPanel2);
         resultados.addTab("graficas", graficas);
     }
-    private XYDataset createSampleDataset(Double[] estimada) {
-        XYSeries series1 = new XYSeries("X1-Y");
+    private XYDataset createSampleDataset(Double[] estimada,Integer opcion) {
+        XYSeries series1 = new XYSeries("X - Y");
         for(int i=0;i<datos.length;i++){
-            if(estimada==null)
+            if(opcion.equals(1))
                 series1.add(datos[i][0], datos[i][2]);
             else
-                series1.add(datos[i][0], estimada[i]);
+                series1.add(datos[i][1], datos[i][2]);
         }
         
-        XYSeries series2 = new XYSeries("X2-Y");
+        XYSeries series2 = new XYSeries("X - Y estimada");
         for(int i=0;i<datos.length;i++){
-            if(estimada==null)
-                series2.add(datos[i][1], datos[i][2]);
+            if(opcion.equals(1))
+                series2.add(datos[i][0], estimada[i]);
             else
                 series2.add(datos[i][1], estimada[i]);
         }
@@ -279,6 +326,41 @@ public class RegresionMultiple {
         dataset.addSeries(series1);
         dataset.addSeries(series2);
         return dataset;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getActionCommand().equals("calcular")){//podemos comparar por el contenido del boton
+            String sx1 = this.cajaVariableX1.getText();
+            String sx2 = this.cajaVariableX2.getText();
+            Double efectividad = Double.parseDouble(this.combo.getSelectedItem()+"");
+            if(isDouble(sx1) && isDouble(sx2)){
+                Double x1 = Double.parseDouble(sx1);
+                Double x2 = Double.parseDouble(sx2);
+                Integer gradosLibertad = N-3;
+                TDistribution td = new TDistribution(gradosLibertad);
+                Double distribucionT = td.inverseCumulativeProbability(((100.0-efectividad)/2.0)/100.0) * -1.0;
+                Double estimadaDeY = b0 + b1 *x1 + b2 * x2;
+                Double lidisT = estimadaDeY - distribucionT * Se;
+                Double lsdisT = estimadaDeY + distribucionT * Se;
+                String[] titulos2 = {"Y estimada","Li","Ls"};//los titulos de la tabla
+                String[][] pruebaIntervalos = {{estimadaDeY+"",lidisT+"",lsdisT+""}};
+                DefaultTableModel TableModel = new DefaultTableModel( pruebaIntervalos, titulos2 );
+                jtable2.setModel(TableModel); 
+            }else {
+                JOptionPane.showMessageDialog(null, "Valores no validos.");
+            }
+            
+        }
+    }
+    
+    public boolean isDouble(String cadena){
+	try {
+		Double.parseDouble(cadena);
+		return true;
+	} catch (NumberFormatException nfe){
+		return false;
+	}
     }
 
 }
