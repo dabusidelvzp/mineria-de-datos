@@ -8,7 +8,13 @@ package regresiones;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -119,7 +125,7 @@ public class RegresionSimple {
            yEstimada[i] = b0 + (b1 *datos[i][0]);
            }
             
-
+           r = dxy/(dx*dy);
            System.out.println("sum x: " + sumatorias[0]);
            System.out.println("sum y: " + sumatorias[1]);
            System.out.println("sum x*y: " + sumatorias[2]);
@@ -162,22 +168,38 @@ public class RegresionSimple {
         JLabel etiquetaN = new JLabel("N");
         JTextField cajaN = new JTextField();
         cajaN.setText(N+"");
-        //JLabel etiquetaK = new JLabel("K");
-        //JTextField cajaK = new JTextField();
-        //cajaK.setText("2");
         JLabel etiquetab0 = new JLabel("b0");
         JTextField cajab0 = new JTextField();
         cajab0.setText(b0+"");
         JLabel etiquetab1 = new JLabel("b1");
         JTextField cajab1 = new JTextField();
         cajab1.setText(b1+"");
-        JLabel etiquetab2 = new JLabel("b2");
-        JTextField cajab2 = new JTextField();
-        panel2.add(etiquetab2);
+        JLabel etiquetadxy = new JLabel("DXy");
+        JTextField cajadxy = new JTextField();
+        cajadxy.setText(dxy+"");
+        JLabel etiquetadx = new JLabel("DX");
+        JTextField cajadx = new JTextField();
+        cajadx.setText(dx+"");
+        JLabel etiquetady = new JLabel("DY");
+        JTextField cajady = new JTextField();
+        cajady.setText(dy+"");
+        JLabel etiquetaR = new JLabel("R");
+        JTextField cajaR = new JTextField();
+        cajaR.setText(r+"");
+        panel2.add(etiquetaN);
+        panel2.add(cajaN);
         panel2.add(etiquetab0);
         panel2.add(cajab0);
         panel2.add(etiquetab1);
         panel2.add(cajab1);
+        panel2.add(etiquetadxy);
+        panel2.add(cajadxy);
+        panel2.add(etiquetadx);
+        panel2.add(cajadx);
+        panel2.add(etiquetady);
+        panel2.add(cajady);
+        panel2.add(etiquetaR);
+        panel2.add(cajaR);
         panel.add(panel2,BorderLayout.SOUTH);//agrego el panel2 con rejilla en el panel principal al sur
         resultados.addTab("resultado", panel);
         // ***********************************************************************
@@ -206,10 +228,10 @@ public class RegresionSimple {
         resultados.addTab("Graficas", graficas);
         
         //IMPRIMIR JTABLE
-        MessageFormat headerFormat = new MessageFormat("MI CABECERA");
+       /* MessageFormat headerFormat = new MessageFormat("MI CABECERA");
         MessageFormat footerFormat = new MessageFormat("- Página {0} -");
         jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);
-        
+        */
         
         }catch(Exception e){
             e.printStackTrace();
@@ -232,6 +254,7 @@ public class RegresionSimple {
         dataset.addSeries(series2);
         return dataset;
     }
+   
     
 }
 

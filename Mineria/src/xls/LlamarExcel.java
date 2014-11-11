@@ -118,6 +118,7 @@ public class LlamarExcel implements DropTargetListener{
                             /* Recorre todas las celdas*/
                             String celda="";
                             Integer contador=0;
+                            System.out.println("numero de filas:"+ hoja.getRows());
                             for ( int fila = 0; fila < hoja.getRows(); fila++ )
                                 //sumar los putos valores de cada celda --(celda+=; en c/iteracion)
                             {   
