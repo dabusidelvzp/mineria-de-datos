@@ -31,6 +31,8 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         FileFilter filter1 = new ExtensionFileFilter("excel", "xls");
         this.jFileChooser1.setFileFilter(filter1);
+        FileFilter filter2 = new ExtensionFileFilter("texto", "txt");
+        this.jFileChooser1.setFileFilter(filter2);
     }
 
     /**
@@ -54,6 +56,7 @@ public class Menu extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -154,6 +157,15 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem9);
 
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem5.setText("Minería de texto");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem5);
+
         jMenu1.add(jMenu3);
 
         jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
@@ -245,7 +257,7 @@ public class Menu extends javax.swing.JFrame {
                  "Selector de opciones",
                  JOptionPane.QUESTION_MESSAGE,
                  null,  // null para icono defecto
-                 new Object[] { "Estadistica Descriptiva", "Regresión Simple", "Regresión Multiple" },
+                 new Object[] { "Estadistica Descriptiva", "Regresión Simple", "Regresión Multiple" ,"Mineria de texto"},
                  "Estadistica Descriptiva");
              if(seleccion == null ){
                  JOptionPane.showMessageDialog(rootPane, "Operación cancelada");
@@ -266,6 +278,11 @@ public class Menu extends javax.swing.JFrame {
                      TablaExcel tabla= new TablaExcel("Regresion multiple",3,archivo);
                      this.jDesktopPane1.add(tabla);
                      tabla.show();
+                 } else if(seleccion.equals("Mineria de texto")) {
+                     File archivo = this.jFileChooser1.getSelectedFile();
+                     TablaExcel tabla= new TablaExcel("Mineria de texto",4,archivo);
+                     this.jDesktopPane1.add(tabla);
+                     tabla.show();
                  }
              } 
         }
@@ -275,6 +292,13 @@ public class Menu extends javax.swing.JFrame {
     private void jFileChooser1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jFileChooser1MouseDragged
         // TODO add your handling code here:
     }//GEN-LAST:event_jFileChooser1MouseDragged
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+         TablaExcel tabla= new TablaExcel("Minería de texto",4,null);
+            this.jDesktopPane1.add(tabla);
+            tabla.show();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -327,6 +351,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem9;
     // End of variables declaration//GEN-END:variables
 }

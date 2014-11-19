@@ -7,8 +7,16 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -17,6 +25,7 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import regresiones.EstadisticaDescriptiva;
+import regresiones.MineriaTexto;
 import regresiones.RegresionMultiple;
 import regresiones.RegresionSimple;
 
@@ -27,12 +36,13 @@ public class LlamarExcel implements DropTargetListener{
     private DefaultTableModel TableModel = new DefaultTableModel();
     private Integer columnas =0;
     private JTabbedPane p1;
+    private boolean isTexto;
     
     public LlamarExcel( JTable jtable ,Integer c,JTabbedPane pestana,File archivo){
         this.jtable = jtable;
         this.columnas=c;
         p1 = pestana;
-        
+        isTexto=false;
         dt = new DropTarget( jtable , this );  
         
         if(archivo!= null){
@@ -70,13 +80,24 @@ public class LlamarExcel implements DropTargetListener{
                         File file = new File( list.get(0).toString() );
                         if ( file.exists() ){    
                             /* SI el archivo corresponde a un archivo excel */
-                            if( file.getName().endsWith("xls") )
-                            {
-                                readXLS( file );
-                            }else{
-                                JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es xls","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
-                                
-                            }                            
+                            if(columnas==4) {
+                                if( file.getName().endsWith("txt") )
+                                {
+                                    readTXT( file );
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es txt","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
+
+                                }  
+                            } else {
+                                if( file.getName().endsWith("xls") )
+                                {
+                                    readXLS( file );
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es xls","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
+
+                                }  
+                            }
+                                                      
                         }else{ System.err.println( "error archivo no existe " ); }
                     }                    
                     dtde.dropComplete(true);
@@ -86,8 +107,7 @@ public class LlamarExcel implements DropTargetListener{
             System.err.println("Drop failed: " + dtde );
             dtde.rejectDrop();
         } catch (Exception ex) {
-            System.err.println( ex.getMessage() );
-            dtde.rejectDrop();
+            ex.printStackTrace();
         }
   }
 
@@ -115,10 +135,12 @@ public class LlamarExcel implements DropTargetListener{
                         Sheet hoja = workbook.getSheet( numeroPagina-1 );                
                         
                         /* forma el array para los nombres de las columnas del JTable */
+
                         if(hoja.getColumns()>=columnas) {
                              String[] columNames = new String[ columnas];
                             /* Forma la matriz para los datos */
-                            Double[][] data = new Double[ hoja.getRows() ][ columnas ];  
+                            Double[][] data = new Double[ hoja.getRows() ][ columnas ]; 
+                            String[][] texto = new String[hoja.getRows()][columnas];
                             /* Recorre todas las celdas*/
                             String celda="";
                             Integer contador=0;
@@ -134,33 +156,37 @@ public class LlamarExcel implements DropTargetListener{
                                     /* Lee celda y coloca en el array */
                                     celda= hoja.getCell(columna, fila).getContents();
                                     if(isDouble(celda))
-                                        data[ fila-contador ][ columna ] = Double.parseDouble(celda);
+                                         data[ fila-contador ][ columna ] = Double.parseDouble(celda);
                                     else
-                                        contador++;
+                                         contador++;
+                                    
+                                    
                                         
                                 }                                        
                                 //VERIFICAR LA ASIGNACION DEL LOS NOMBRE DE LA COLUMNAS
                             }
                             //rearmamos el arreglo para quitarle registros vacios
-                            Double[][] datos=depurarArreglo(data,contador);
-                            /* Crea el TableModel y asigna a tabla */
-                            TableModel = new DefaultTableModel( datos, columNames );
-                            jtable.setModel(TableModel);
-                            //Resolvemos 
-                            if(columnas==1){
-                                EstadisticaDescriptiva  e  = new EstadisticaDescriptiva(datos);
-                                e.resolver(p1);
-                                
-                            }else if(columnas==2){
-                                RegresionSimple simple = new RegresionSimple(datos);
-                                System.out.println("entro 2");
-                                simple.Resolver(p1);
-                                
-                            }else if(columnas==3){
-                                RegresionMultiple multiple= new RegresionMultiple(datos);
-                                multiple.resolver(p1);
-                            }
+                           
+                           
+                                Double[][] datos= depurarArreglo(data,contador);
+                                TableModel = new DefaultTableModel( datos, columNames );
+                                jtable.setModel(TableModel);
+                                //Resolvemos 
+                                if(columnas==1){
+                                    EstadisticaDescriptiva  e  = new EstadisticaDescriptiva(datos);
+                                    e.resolver(p1);
+
+                                }else if(columnas==2){
+                                    RegresionSimple simple = new RegresionSimple(datos);
+                                    System.out.println("entro 2");
+                                    simple.Resolver(p1);
+
+                                }else if(columnas==3){
+                                    RegresionMultiple multiple= new RegresionMultiple(datos);
+                                    multiple.resolver(p1);
+                                }
                             
+                        
                         } else {
                             JOptionPane.showMessageDialog(null, "Columnas insuficientes.", "Columas error", JOptionPane.WARNING_MESSAGE);
                         }
@@ -185,13 +211,23 @@ public class LlamarExcel implements DropTargetListener{
                         System.out.println("entró");
                         if ( file.exists() ){     
                             /* SI el archivo corresponde a un archivo excel */
-                            if( file.getName().endsWith("xls") )
-                            {
-                                readXLS( file );
-                            }else{
-                                JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es xls","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
-                                
-                            }                            
+                             if(columnas==4) {
+                                if( file.getName().endsWith("txt") )
+                                {
+                                    readTXT( file );
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es txt","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
+
+                                }  
+                            } else {
+                                if( file.getName().endsWith("xls") )
+                                {
+                                    readXLS( file );
+                                }else{
+                                    JOptionPane.showMessageDialog(null,"Formato incorrecto,el formato usado es xls","INCOMPATIBILIDAD DE ARCHIVOS", JOptionPane.ERROR_MESSAGE );                                
+
+                                }      
+                           }
                         }else{ System.err.println( "error archivo no existe " ); }
                    
   }
@@ -232,4 +268,43 @@ public class LlamarExcel implements DropTargetListener{
         }
         return datos;
     }
+
+    private String quitarAcentos(String cadena) {
+        cadena=cadena.replaceAll("Á", "A");
+        cadena=cadena.replaceAll("É", "E");
+        cadena=cadena.replaceAll("Í", "I");
+        cadena=cadena.replaceAll("Ó", "O");
+        cadena=cadena.replaceAll("Ú", "U");
+        return cadena;
+    }
+
+    private void readTXT(File file) {
+        BufferedReader br=null;
+        ArrayList<String> lineas = new ArrayList<String>();
+        try {
+            
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            // Lectura del fichero
+            String linea;
+            while((linea=br.readLine())!= null){
+               
+                lineas.add(quitarAcentos(linea.toUpperCase()));
+            }
+            String[][] datos = new String[lineas.size()][1];
+            for (int i = 0; i < lineas.size(); i++) {
+                datos[i][0] = lineas.get(i);
+            }
+            String[] titulo = {"texto"};
+            TableModel = new DefaultTableModel( datos, titulo );
+            jtable.setModel(TableModel);
+            MineriaTexto mineria = new MineriaTexto();
+            mineria.resolver(datos, p1);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(LlamarExcel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(LlamarExcel.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+         
+    }
+          
 }

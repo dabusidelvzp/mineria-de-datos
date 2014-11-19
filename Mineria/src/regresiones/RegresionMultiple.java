@@ -133,7 +133,6 @@ public class RegresionMultiple implements ActionListener{
        Se =Math.sqrt(Math.pow(sumatorias[8], 2)/(N-2-1));
         pintar(Yestimada,resultados,auxiliar);
         }catch(Exception e) {
-            e.printStackTrace();
         }
     }
     
@@ -317,11 +316,12 @@ public class RegresionMultiple implements ActionListener{
     }
     private XYDataset createSampleDataset(Double[] estimada,Integer opcion) {
         XYSeries series1 = new XYSeries("X - Y");
-        for(int i=0;i<datos.length;i++){
-            if(opcion.equals(1))
-                series1.add(datos[i][0], datos[i][2]);
-            else
-                series1.add(datos[i][1], datos[i][2]);
+        for (Double[] dato : datos) {
+            if (opcion.equals(1)) {
+                series1.add(dato[0], dato[2]);
+            } else {
+                series1.add(dato[1], dato[2]);
+            }
         }
         
         XYSeries series2 = new XYSeries("X - Y estimada");
