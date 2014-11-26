@@ -289,7 +289,8 @@ public class RegresionSimple implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-         try {   MessageFormat headerFormat = new MessageFormat("MI CABECERA");
+         try {   
+             MessageFormat headerFormat = new MessageFormat("MI CABECERA");
         MessageFormat footerFormat = new MessageFormat("- Página {0} -");
         
             jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);

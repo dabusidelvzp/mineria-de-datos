@@ -7,10 +7,15 @@
 package regresiones;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -23,7 +28,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class MineriaTexto {
     private ArrayList<Palabra> palabras;
-    private String[] preposiciones = {"ANTE", "BAJO","DESDE", "DURANTE","ENTRE", "EXCEPTO", "HACIA", "HASTA", "MEDIANTE", "PARA","SALVO", "SEGUN", "SOBRE","TRAS"};
+    private JTable jtable;
+    private String[] preposiciones = {"ANTE", "BAJO","DESDE", 
+        "DURANTE","ENTRE", "EXCEPTO", "HACIA", "HASTA", "MEDIANTE", 
+        "PARA","SALVO", "SEGUN", "SOBRE","TRAS",
+        "PUEDE","COMO","PUEDEN","SOLO","HACER","CUAL","TIENE","DONDE","OTRO","OTRA",
+        "OTROS","OTRAS","HECHO","CUALES","PERO","TODOS","TODAS","ESTA","ESTO","ESTOS","ESTAS"};
     public MineriaTexto() {
         palabras = new ArrayList<Palabra>();
     }
@@ -57,6 +67,8 @@ public class MineriaTexto {
     private String[] dividirLinea(String string) {
         string = string.replace(".", " ");
         string = string.replace(",", " ");
+        string = string.replace("(", " ");
+        string = string.replace(")", " ");
         String[] pa = string.split(" ");
         ArrayList<String> depurado = new ArrayList<String>();
         for(String palabra:pa){
@@ -88,9 +100,32 @@ public class MineriaTexto {
 
     private void pintar(JTabbedPane panel) {
         JPanel resultados = new JPanel(new BorderLayout());
-        JLabel titulo = new JLabel("Resultados");//creamos el titulo
-        resultados.add(titulo,BorderLayout.PAGE_START);//lo agregamos al inicio
-        JTable jtable = new JTable();//creamos la tabla a mostrar
+        //JLabel titulo = new JLabel("Resultados");//creamos el titulo
+        //resultados.add(titulo,BorderLayout.PAGE_START);//lo agregamos al inicio
+        //Creamos el select para los rangos
+        JPanel opcionesCombo = new JPanel(new GridLayout(0,2));
+        JLabel labelOpciones = new JLabel("Mostrar a partir de: ");
+        JComboBox comboOp = new JComboBox(repeticiones());
+        //agregamos el listener al combo
+        comboOp.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+               // The item affected by the event.
+                Object item = e.getItem();
+                
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    //JOptionPane.showMessageDialog(null, item.toString()+" seleccionado");
+                    String[] titulos = {"Palabra","Repetido"};//los titulos de la tabla
+                    DefaultTableModel TableModel = new DefaultTableModel( redimencionarArreglo(Integer.parseInt(item.toString())), titulos );
+                    jtable.setModel(TableModel); 
+                }
+                 
+            }
+        });
+        opcionesCombo.add(labelOpciones);
+        opcionesCombo.add(comboOp);
+        //Creamos la tabla
+        jtable = new JTable();//creamos la tabla a mostrar
         jtable.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
         jtable.setFont(new java.awt.Font("Arial", 1, 14)); 
         jtable.setColumnSelectionAllowed(true);
@@ -108,6 +143,8 @@ public class MineriaTexto {
         JScrollPane jScrollPane1 = new JScrollPane();
         jScrollPane1.setViewportView(jtable);
         jtable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        //agregamos los paneles
+        resultados.add(opcionesCombo,BorderLayout.NORTH);
         resultados.add(jScrollPane1,BorderLayout.CENTER);
         panel.addTab("Resultados", resultados);
     }
@@ -119,6 +156,48 @@ public class MineriaTexto {
                 bandera= true;
         }
         return bandera;
+    }
+    
+    private Integer[] repeticiones(){
+        ArrayList<Integer> rep = new ArrayList<Integer>();
+        Boolean bandera= true;
+        for(int i=0;i<palabras.size();i++){
+            bandera = true;
+            for(int j=0;j<rep.size();j++){
+                if(rep.get(j)==palabras.get(i).getRepetido())
+                    bandera = false;
+            }
+            if(bandera)
+                rep.add(palabras.get(i).getRepetido());
+        }
+        Collections.sort(rep, new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Integer p1= (Integer) o1;
+                Integer p2 = (Integer) o2;
+                return p1.compareTo(p2);
+            }
+        });
+        return rep.toArray(new Integer[rep.size()]);
+    }
+    
+    private String[][] redimencionarArreglo(Integer n){
+        Integer contador =0;
+        for (int i = 0; i <palabras.size() ; i++) {
+            if(palabras.get(i).getRepetido()>=n)
+                contador ++;
+        }
+        String[][] arrTemporal = new String[contador][2];
+        contador=0;
+        for (int i = 0; i <palabras.size() ; i++) {
+            if(palabras.get(i).getRepetido()>=n){
+                arrTemporal[contador][0] = palabras.get(i).getPalabra();
+                arrTemporal[contador][1] = palabras.get(i).getRepetido()+"";
+                contador++;
+            }
+                
+        }
+        return arrTemporal;
     }
     
 }
