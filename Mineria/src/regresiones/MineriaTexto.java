@@ -6,13 +6,20 @@
 
 package regresiones;
 
+import com.itextpdf.text.DocumentException;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,14 +28,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import pdf.PDFtexto;
 
 /**
  *
  * @author hazel
  */
-public class MineriaTexto {
+public class MineriaTexto implements ActionListener{
     private ArrayList<Palabra> palabras;
     private JTable jtable;
+    private String[][] auxiliar;
     private String[] preposiciones = {"ANTE", "BAJO","DESDE", 
         "DURANTE","ENTRE", "EXCEPTO", "HACIA", "HASTA", "MEDIANTE", 
         "PARA","SALVO", "SEGUN", "SOBRE","TRAS",
@@ -116,14 +125,18 @@ public class MineriaTexto {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     //JOptionPane.showMessageDialog(null, item.toString()+" seleccionado");
                     String[] titulos = {"Palabra","Repetido"};//los titulos de la tabla
-                    DefaultTableModel TableModel = new DefaultTableModel( redimencionarArreglo(Integer.parseInt(item.toString())), titulos );
+                    auxiliar = redimencionarArreglo(Integer.parseInt(item.toString()));
+                    DefaultTableModel TableModel = new DefaultTableModel( auxiliar, titulos );
                     jtable.setModel(TableModel); 
                 }
                  
             }
         });
+        JButton botonI = new JButton("Exportar a PDF");
+        botonI.addActionListener(this);
         opcionesCombo.add(labelOpciones);
         opcionesCombo.add(comboOp);
+        opcionesCombo.add(botonI);
         //Creamos la tabla
         jtable = new JTable();//creamos la tabla a mostrar
         jtable.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 0, 0), 2, true));
@@ -138,6 +151,7 @@ public class MineriaTexto {
             arregloFinal[i][0]= palabras.get(i).getPalabra();
             arregloFinal[i][1]= palabras.get(i).getRepetido()+"";
         }
+        auxiliar = arregloFinal;
         DefaultTableModel TableModel = new DefaultTableModel( arregloFinal, titulos );
         jtable.setModel(TableModel); 
         JScrollPane jScrollPane1 = new JScrollPane();
@@ -198,6 +212,23 @@ public class MineriaTexto {
                 
         }
         return arrTemporal;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if(e.getActionCommand().equals("Exportar a PDF")){
+
+                    String nombrePDF = JOptionPane.showInputDialog("Escribe el nombre del PDF (sin extension)");
+                    PDFtexto.crearPDF("Mineria de Texto", auxiliar, nombrePDF);
+                    JOptionPane.showMessageDialog(jtable, "Se creo el PDF");
+
+            }
+        } catch (FileNotFoundException ex) {
+                Logger.getLogger(MineriaTexto.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DocumentException ex) {
+                Logger.getLogger(MineriaTexto.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     
 }

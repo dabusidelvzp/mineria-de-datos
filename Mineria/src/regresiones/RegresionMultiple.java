@@ -6,14 +6,14 @@
 
 package regresiones;
 
+import com.itextpdf.text.DocumentException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.print.PrinterException;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -26,6 +26,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.math3.distribution.TDistribution;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -35,7 +36,7 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.apache.commons.math3.distribution.TDistribution;
+import pdf.PDFmultiple;
 /**
  *
  * @author hazel
@@ -46,6 +47,12 @@ public class RegresionMultiple implements ActionListener{
     private Double b1;
     private Double b2;
     private Double Se;
+    private Double prediccionX1;
+    private Double prediccionX2;
+    private Double prediccionEfect;
+    private Double prediccionLs;
+    private Double prediccionLi;
+    private Double prediccionYestimada; 
     private Double[][] datos;
     private JTextField cajaVariableX1;
     private JTextField cajaVariableX2;
@@ -160,7 +167,7 @@ public class RegresionMultiple implements ActionListener{
         jtable.setMinimumSize(new java.awt.Dimension(80, 80));
         String[] titulos = {"X1","X2","Y","Y estimada","X1^2","X2^2","X1*Y","X2*Y","Y-Y estimada"};//los titulos de la tabla
         arregloFinal = new String[N][9];
-        DecimalFormat formato = new DecimalFormat("0.000");
+        DecimalFormat formato = new DecimalFormat("0.00");
         for(int i=0;i<N;i++){//armamos el arreglo
             arregloFinal[i][0]= datos[i][0]+"";
             arregloFinal[i][1]= datos[i][1]+"";
@@ -211,7 +218,7 @@ public class RegresionMultiple implements ActionListener{
         cajaSe.setEditable(false);
         cajaSe.setAutoscrolls(true);
         
-        JButton botonI = new JButton("imprimir");
+        JButton botonI = new JButton("Exportar a PDF");
         botonI.addActionListener(this);
         
         panel2.add(etiquetaN);
@@ -343,18 +350,18 @@ public class RegresionMultiple implements ActionListener{
         if(e.getActionCommand().equals("calcular")){//podemos comparar por el contenido del boton
             String sx1 = this.cajaVariableX1.getText();
             String sx2 = this.cajaVariableX2.getText();
-            Double efectividad = Double.parseDouble(this.combo.getSelectedItem()+"");
+            prediccionEfect = Double.parseDouble(this.combo.getSelectedItem()+"");
             if(isDouble(sx1) && isDouble(sx2)){
-                Double x1 = Double.parseDouble(sx1);
-                Double x2 = Double.parseDouble(sx2);
+                prediccionX1= Double.parseDouble(sx1);
+                prediccionX2 = Double.parseDouble(sx2);
                 Integer gradosLibertad = N-3;
                 TDistribution td = new TDistribution(gradosLibertad);
-                Double distribucionT = td.inverseCumulativeProbability(((100.0-efectividad)/2.0)/100.0) * -1.0;
-                Double estimadaDeY = b0 + b1 *x1 + b2 * x2;
-                Double lidisT = estimadaDeY - distribucionT * Se;
-                Double lsdisT = estimadaDeY + distribucionT * Se;
+                Double distribucionT = td.inverseCumulativeProbability(((100.0-prediccionEfect)/2.0)/100.0) * -1.0;
+                prediccionYestimada = b0 + b1 *prediccionX1 + b2 * prediccionX2;
+                prediccionLi = prediccionYestimada - distribucionT * Se;
+                prediccionLs = prediccionYestimada + distribucionT * Se;
                 String[] titulos2 = {"Y estimada","Li","Ls"};//los titulos de la tabla
-                String[][] pruebaIntervalos = {{estimadaDeY+"",lidisT+"",lsdisT+""}};
+                String[][] pruebaIntervalos = {{prediccionYestimada+"",prediccionLi+"",prediccionLs+""}};
                 DefaultTableModel TableModel = new DefaultTableModel( pruebaIntervalos, titulos2 );
                 jtable2.setModel(TableModel); 
             }else {
@@ -365,16 +372,18 @@ public class RegresionMultiple implements ActionListener{
             
             
         }
-        if(e.getActionCommand().equals("imprimir")) {
+        if(e.getActionCommand().equals("Exportar a PDF")) {
+            try {
+                String nombrePDF = JOptionPane.showInputDialog("Escribe el nombre del PDF (sin extension)");
+                Double[] prediccionValores = {prediccionX1,prediccionX2,prediccionEfect,prediccionYestimada,prediccionLi,prediccionLs};
+                PDFmultiple.crearPDF("Regresion multiple", arregloFinal, nombrePDF,N,b0,b1,b2,Se,prediccionValores);
                 
-                 try {   MessageFormat headerFormat = new MessageFormat("MI CABECERA");
-                    MessageFormat footerFormat = new MessageFormat("- Página {0} -");
-
-                        jtable.print(JTable.PrintMode.FIT_WIDTH, headerFormat, footerFormat);
-                    } catch (PrinterException ex) {
-                        Logger.getLogger(RegresionSimple.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                JOptionPane.showMessageDialog(jtable, "Se creo el PDF");
+            } catch (DocumentException | FileNotFoundException ex) {
+                Logger.getLogger(RegresionMultiple.class.getName()).log(Level.SEVERE, null, ex);
             }
+                 
+      }
     }
     
     public boolean isDouble(String cadena){
