@@ -158,7 +158,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu3.add(jMenuItem9);
 
         jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem5.setText("Minería de texto");
+        jMenuItem5.setText("Mineria de texto");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
@@ -294,8 +294,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jFileChooser1MouseDragged
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        // TODO add your handling code here:
-         TablaExcel tabla= new TablaExcel("Minería de texto",4,null);
+        TablaExcel tabla= new TablaExcel("Minería de texto",4,null);
             this.jDesktopPane1.add(tabla);
             tabla.show();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
@@ -351,6 +350,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem9;
     // End of variables declaration//GEN-END:variables
 }
