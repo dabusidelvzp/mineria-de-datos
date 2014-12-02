@@ -5,6 +5,7 @@
  */
 package regresiones;
 
+import com.itextpdf.text.DocumentException;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
@@ -12,6 +13,7 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
+import java.io.FileNotFoundException;
 import static java.lang.Math.floor;
 import static java.lang.Math.log;
 import static java.lang.Math.log10;
@@ -24,6 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -38,6 +41,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import pdf.PDFdescriptiva;
 
 /**
  *
@@ -77,11 +81,12 @@ public class EstadisticaDescriptiva implements ActionListener{
 
     private Double[][] datos;
     private Double[][] tablaComplete;
+     private Double[][] tablaCompleta;
     private JTable jtable;
 
     public EstadisticaDescriptiva(Double[][] d) {
 
-        datos = d;
+        datos = quitarNegativos(d);
         N = datos.length;
 
     }
@@ -115,7 +120,7 @@ public class EstadisticaDescriptiva implements ActionListener{
         //rellenamos la matriz
         tablaComplete  =rellenar(tabla);
         
-        Double[][] tablaCompleta = rellenar(tabla);
+        tablaCompleta = rellenar(tabla);
         
         //mediana
         MEDIANA = Mediana(tablaCompleta);
@@ -549,7 +554,7 @@ public class EstadisticaDescriptiva implements ActionListener{
         cajaModa.setText(MODA + "");
         cajaModa.setEditable(false);
 
-        JButton boton = new JButton("imprimir");
+        JButton boton = new JButton("Exportar a PDF");
         boton.addActionListener(this);
         
         medidas.add(etiquetaMax);
@@ -624,7 +629,7 @@ public class EstadisticaDescriptiva implements ActionListener{
             for (int i = 0; i < nueva.length; i++) {
                 nueva[i][0] = i + 1 + "";
             }
-            DecimalFormat formato = new DecimalFormat("0.000");
+            DecimalFormat formato = new DecimalFormat("0.00");
             for (int i = 0; i < nueva.length; i++) {
                 for (int j = 1; j < nueva[0].length; j++) {
                     if (j == 6 || j == 7) {
@@ -642,14 +647,41 @@ public class EstadisticaDescriptiva implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
-         try {   MessageFormat headerFormat = new MessageFormat("MI CABECERA");
-        MessageFormat footerFormat = new MessageFormat("- Página {0} -");
+         if(e.getActionCommand().equals("Exportar a PDF")) {
+            try {
+                String nombrePDF = JOptionPane.showInputDialog("Escribe el nombre del PDF (sin extension)");
+                String[] datosVariables = {MAXIMO+"",MINIMO+"",RANGO+"",INTERVALOS+"",AMPLITUD+"",RANGOAMPLIADO+"",
+                                    DIFERENCIARANGOS+"",LIPI+"",LSUI+"",DM+"",VARIANZA+"",DE+"",MEDIA+"",MEDIANA+"",MODA+"" };
+                PDFdescriptiva.crearPDF("Estadistica descriptiva",formato(tablaCompleta),nombrePDF,N,datosVariables);
+                
+                JOptionPane.showMessageDialog(jtable, "Se creo el PDF");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(RegresionMultiple.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DocumentException ex) {
+                 Logger.getLogger(EstadisticaDescriptiva.class.getName()).log(Level.SEVERE, null, ex);
+             }
+                 
+      }
         
-            jtable.print(PrintMode.FIT_WIDTH, headerFormat, footerFormat);
-        } catch (PrinterException ex) {
-            Logger.getLogger(RegresionSimple.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    private Double[][] quitarNegativos(Double[][] d) {
+        Integer negativos =0;
+        for (int i = 0; i < d.length; i++) {
+            if(d[i][0]<0)
+                negativos ++;
+            
         }
-        
+        Double[][] apoyo = new Double[d.length-negativos][1];
+        Integer x=0;
+        for (int i = 0; i < d.length; i++) {
+            if(d[i][0]>=0)
+                apoyo[i-x][0]=d[i][0];
+            else
+                x++;
+            
+        }
+        return apoyo;
     }
 
     
