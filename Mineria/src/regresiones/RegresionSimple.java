@@ -370,13 +370,14 @@ public class RegresionSimple implements ActionListener {
             System.out.println("imprimir"+ e.getActionCommand());
             
             
-            
+            //comentario
         }
         if(e.getActionCommand().equals("Exportar a PDF")) {
             try {
                 String nombrePDF = JOptionPane.showInputDialog("Escribe el nombre del PDF (sin extension)");
                 Double[] prediccionValores = {prediccionX1,prediccionEfect,prediccionYestimada,prediccionLi,prediccionLs};
-                PDFsimple.crearPDF("Regresion simple", arregloFinal, nombrePDF,N,b0,b1,Se,prediccionValores);
+                PDFsimple.crearPDF("Regresion simple", arregloFinal, nombrePDF,N,b0,b1,Se,
+                        dx,dy,dxy,r,prediccionValores);
                 
                 JOptionPane.showMessageDialog(jtable, "Se creo el PDF");
             } catch (DocumentException | FileNotFoundException ex) {
