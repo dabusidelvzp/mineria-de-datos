@@ -25,7 +25,7 @@ import java.io.FileOutputStream;
  *
  * @author pollito
  */
-public class PDFsimple {
+public class PDFsimple {//comentario
       private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD);
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
