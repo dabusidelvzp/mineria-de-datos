@@ -30,34 +30,40 @@ public class PDFsimple {//comentario
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD);
     private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     
-    public static void crearPDF(String titulo,String[][] arreglo,String nombre,Integer N,Double b0,Double b1,Double Se,Double[] prediccion) throws DocumentException, FileNotFoundException {
+    public static void crearPDF(String titulo,String[][] arreglo,String nombre,Integer N,Double b0,Double b1,Double Se,
+            Double dx,Double dy,Double dxy,Double r,Double[] prediccion) throws DocumentException, FileNotFoundException {
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(nombre+".pdf"));
         document.open();
         Paragraph preface = new Paragraph();
         // agregamos el titulo y un parrafo
         agregarTitulo(document,titulo);
-        agregarContenido(document,titulo,arreglo,N,b0,b1,Se,prediccion);
+        agregarContenido(document,titulo,arreglo,N,b0,b1,Se,dx,dy,dxy,r,prediccion);
         
 
         document.close();
     }
     
-    private static void agregarContenido(Document document,String titulo,String[][] arreglo,Integer N,Double b0,Double b1,Double Se,Double[] prediccion) throws DocumentException {
+    private static void agregarContenido(Document document,String titulo,String[][] arreglo,Integer N,Double b0,
+            Double b1,Double Se,Double dx,Double dy,Double dxy,Double r,Double[] prediccion) throws DocumentException {
         
         agregarTabla(document,titulo,arreglo);
         
         Anchor anchor = new Anchor("Datos", catFont);
         anchor.setName("Datos");
         Chapter catPart = new Chapter(new Paragraph(anchor), 1);
-        
+        //comentario
         Paragraph subPara = new Paragraph("Variables", subFont);
         Section subCatPart = catPart.addSection(subPara);
         subCatPart.add(new Paragraph("N: "+N));
-        subCatPart.add(new Paragraph("K: 2"));
+        subCatPart.add(new Paragraph("K: 1"));
         subCatPart.add(new Paragraph("b0: "+b0));
         subCatPart.add(new Paragraph("b1: "+b1));
         subCatPart.add(new Paragraph("Se: "+Se));
+        subCatPart.add(new Paragraph("DX: "+dx));
+        subCatPart.add(new Paragraph("DY: "+dy));
+        subCatPart.add(new Paragraph("DXY: "+dxy));
+        subCatPart.add(new Paragraph("R: "+r));
         Paragraph espacio = new Paragraph();
         addEmptyLine( espacio, 1);
         subCatPart.add(espacio);
