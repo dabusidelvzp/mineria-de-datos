@@ -8,39 +8,28 @@ package regresiones;
 import com.itextpdf.text.DocumentException;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
 import static java.lang.Math.floor;
-import static java.lang.Math.log;
 import static java.lang.Math.log10;
-import static java.lang.Math.round;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTable.PrintMode;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.general.DefaultPieDataset;
 import pdf.PDFdescriptiva;
 
 /**
@@ -118,7 +107,7 @@ public class EstadisticaDescriptiva implements ActionListener{
         MEDIA = Media(tabla);
         System.out.println("Media : " + MEDIA);
         //rellenamos la matriz
-        tablaComplete  =rellenar(tabla);
+        
         
         tablaCompleta = rellenar(tabla);
         
@@ -203,8 +192,9 @@ public class EstadisticaDescriptiva implements ActionListener{
         int cinco = 4;
         Double r = Rango();
         Integer i = Intervalo();
-
-        amplitud = (r / i) + cinco;
+        // 
+        Double[] MM = MaxYmin();
+        amplitud = (r / i) + (MM[1]/4);
         amplitud = floor(amplitud);
         return amplitud;
     }
@@ -242,19 +232,14 @@ public class EstadisticaDescriptiva implements ActionListener{
         min = mmm[1];
 
         Lipi = (min - (r / 2));
-
+        if(Lipi<0.0)
+            Lipi=0.0;
         return Lipi;
     }
 
     public Double Lsui() {
         //=TRUNCAR(min-DifR/2)
-        Double lipi = LiPi();
-        if (lipi == 0) {
-            Double Lsui = 0.0;
-            double r = DifRango();
-            Lsui = r - 1;
-        }
-
+       
         Double Lsui = 0.0;
         Double[] mmm = MaxYmin();
         Double max = 0.0;
@@ -264,7 +249,12 @@ public class EstadisticaDescriptiva implements ActionListener{
         max = mmm[0];
 
         Lsui = (max + r / 2);
+        Double min = mmm[1];
 
+        Double LipiAyuda = (min - (r / 2));
+        if(LipiAyuda<0)
+            Lsui = Lsui - LipiAyuda;
+        
         return Lsui;
     }
 
