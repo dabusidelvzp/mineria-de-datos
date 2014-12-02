@@ -56,7 +56,7 @@ public class PDFsimple {//comentario
         Paragraph subPara = new Paragraph("Variables", subFont);
         Section subCatPart = catPart.addSection(subPara);
         subCatPart.add(new Paragraph("N: "+N));
-        subCatPart.add(new Paragraph("K: 2"));
+        subCatPart.add(new Paragraph("K: 1"));
         subCatPart.add(new Paragraph("b0: "+b0));
         subCatPart.add(new Paragraph("b1: "+b1));
         subCatPart.add(new Paragraph("Se: "+Se));
